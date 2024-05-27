@@ -1,0 +1,719 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>2. 알아두면 백엔드 개발자를 위한 지식</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="85a40c95-3d52-4e83-a235-af9588476810" class="page sans"><header><h1 class="page-title">2. 알아두면 백엔드 개발자를 위한 지식</h1><p class="page-description"></p></header><div class="page-body"><ul id="903542ba-8877-402b-809d-5b9a61511824" class="bulleted-list"><li style="list-style-type:disc">node.js는  C++과  자바스크립트, 파이썬 등을 이루어져 있음<ul id="a0582d09-40f0-453b-a2f2-5b0da9b89760" class="bulleted-list"><li style="list-style-type:circle">파이썬은  빌드와 테스트에만 사용됨</li></ul></li></ul><figure id="fb116877-7402-4f78-b2ae-509a73b76822" class="image"><a href="2%20%E1%84%8B%E1%85%A1%E1%86%AF%E1%84%8B%E1%85%A1%E1%84%83%E1%85%AE%E1%84%86%E1%85%A7%E1%86%AB%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%80%E1%85%A2%E1%84%87%E1%85%A1%E1%86%AF%E1%84%8C%E1%85%A1%E1%84%85%E1%85%B3%E1%86%AF%20%E1%84%8B%E1%85%B1%E1%84%92%E1%85%A1%E1%86%AB%20%E1%84%8C%E1%85%B5%E1%84%89%E1%85%B5%E1%86%A8%2085a40c953d524e83a235af9588476810/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-08_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_12.56.58.png"><img style="width:530px" src="2%20%E1%84%8B%E1%85%A1%E1%86%AF%E1%84%8B%E1%85%A1%E1%84%83%E1%85%AE%E1%84%86%E1%85%A7%E1%86%AB%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%80%E1%85%A2%E1%84%87%E1%85%A1%E1%86%AF%E1%84%8C%E1%85%A1%E1%84%85%E1%85%B3%E1%86%AF%20%E1%84%8B%E1%85%B1%E1%84%92%E1%85%A1%E1%86%AB%20%E1%84%8C%E1%85%B5%E1%84%89%E1%85%B5%E1%86%A8%2085a40c953d524e83a235af9588476810/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-08_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_12.56.58.png"/></a></figure><hr id="cc3a599c-9f27-471a-abe6-fc03d772d8cb"/><p id="c0ed4718-cdf7-4297-993a-6f50babeffc7" class="">
+</p><ol type="1" id="319cd353-34ad-4d7f-bbd0-78e0b5e4e2ef" class="numbered-list" start="1"><li>자바스크립트</li></ol><ol type="1" id="7d4fdfc1-a67f-4ca9-b270-cb274bbb8295" class="numbered-list" start="2"><li>node.js  API사용<ol type="a" id="7c112ae3-277d-47f1-a100-cae5444aa8b1" class="numbered-list" start="1"><li>Node.js API는 C++에 바인딩</li></ol></li></ol><ol type="1" id="1ac1dd25-5864-4425-a741-a705856893c3" class="numbered-list" start="3"><li>C++ 애드온 호출</li></ol><ol type="1" id="02421228-1bba-486a-8ecd-4583fa6b4173" class="numbered-list" start="4"><li>C++에서 V8을 사용하여 자바스크립트 해서(컴파일) </li></ol><ol type="1" id="b708f1b3-5bb0-4822-bb5d-d4bc9603df99" class="numbered-list" start="5"><li>libuv의 API를 운영체제에 맞게 사용 </li></ol><ul id="70f3c9d7-f8f8-4a94-9796-3815798f623c" class="bulleted-list"><li style="list-style-type:disc">Node.js의 구성요소</li></ul><figure id="006ed22c-36ce-46ba-8438-038963ce4a13" class="image"><a href="2%20%E1%84%8B%E1%85%A1%E1%86%AF%E1%84%8B%E1%85%A1%E1%84%83%E1%85%AE%E1%84%86%E1%85%A7%E1%86%AB%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%80%E1%85%A2%E1%84%87%E1%85%A1%E1%86%AF%E1%84%8C%E1%85%A1%E1%84%85%E1%85%B3%E1%86%AF%20%E1%84%8B%E1%85%B1%E1%84%92%E1%85%A1%E1%86%AB%20%E1%84%8C%E1%85%B5%E1%84%89%E1%85%B5%E1%86%A8%2085a40c953d524e83a235af9588476810/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-08_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_1.01.10.png"><img style="width:522px" src="2%20%E1%84%8B%E1%85%A1%E1%86%AF%E1%84%8B%E1%85%A1%E1%84%83%E1%85%AE%E1%84%86%E1%85%A7%E1%86%AB%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%80%E1%85%A2%E1%84%87%E1%85%A1%E1%86%AF%E1%84%8C%E1%85%A1%E1%84%85%E1%85%B3%E1%86%AF%20%E1%84%8B%E1%85%B1%E1%84%92%E1%85%A1%E1%86%AB%20%E1%84%8C%E1%85%B5%E1%84%89%E1%85%B5%E1%86%A8%2085a40c953d524e83a235af9588476810/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-08_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_1.01.10.png"/></a></figure><hr id="c35cb59c-dfed-4b16-a15f-87f65c525dbe"/><p id="8ffbc87b-1c0b-46f8-87b4-98b867fca88f" class="">
+</p><ul id="b6bcbbe5-af7d-447c-acd7-84c151a5d119" class="bulleted-list"><li style="list-style-type:disc">자바스크립트 실행을 위한 V8 엔진<ul id="8fa11df4-29cb-46bd-a8bd-d7b7fdef2d33" class="bulleted-list"><li style="list-style-type:circle">엔진은 사용자가 작성한 코드를 실행하는 프로그램<ul id="bd21f6d0-1671-4d9a-9b47-78e34da04001" class="bulleted-list"><li style="list-style-type:square">엔진의 종류<ul id="c33a462a-bdb0-4f7a-90a9-51699281e17e" class="bulleted-list"><li style="list-style-type:disc">컴파일러</li></ul><ul id="d3f8dc5b-834d-4e6c-a959-7fa3532414e4" class="bulleted-list"><li style="list-style-type:disc">인터프리터</li></ul><ul id="b63a0a15-9647-42f1-a9b4-db65b4fe8595" class="bulleted-list"><li style="list-style-type:disc">가비지 컬랙터 : 메모리 누수를 방지하기 위해 주기적으로 사용하지 않는 메모리 공간 을 회수</li></ul><ul id="a8f5e0e8-8ab2-4e5e-8ae5-d1afe89fb022" class="bulleted-list"><li style="list-style-type:disc">콜 스택 : 현재 실행중이 서브 루틴에 관한 정보를 저장하는 스택 </li></ul><ul id="3a6f5d1a-0d32-44ac-bb98-bdf53addb0ea" class="bulleted-list"><li style="list-style-type:disc">힙 : 객체나 동적 데이터가 저장되는 메모리 공간</li></ul></li></ul></li></ul></li></ul><figure id="0c3b81d6-9d97-4f06-ab14-b9a77c315180" class="image" style="text-align:left"><a href="2%20%E1%84%8B%E1%85%A1%E1%86%AF%E1%84%8B%E1%85%A1%E1%84%83%E1%85%AE%E1%84%86%E1%85%A7%E1%86%AB%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%80%E1%85%A2%E1%84%87%E1%85%A1%E1%86%AF%E1%84%8C%E1%85%A1%E1%84%85%E1%85%B3%E1%86%AF%20%E1%84%8B%E1%85%B1%E1%84%92%E1%85%A1%E1%86%AB%20%E1%84%8C%E1%85%B5%E1%84%89%E1%85%B5%E1%86%A8%2085a40c953d524e83a235af9588476810/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-08_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_1.07.14.png"><img style="width:303px" src="2%20%E1%84%8B%E1%85%A1%E1%86%AF%E1%84%8B%E1%85%A1%E1%84%83%E1%85%AE%E1%84%86%E1%85%A7%E1%86%AB%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%80%E1%85%A2%E1%84%87%E1%85%A1%E1%86%AF%E1%84%8C%E1%85%A1%E1%84%85%E1%85%B3%E1%86%AF%20%E1%84%8B%E1%85%B1%E1%84%92%E1%85%A1%E1%86%AB%20%E1%84%8C%E1%85%B5%E1%84%89%E1%85%B5%E1%86%A8%2085a40c953d524e83a235af9588476810/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-08_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_1.07.14.png"/></a></figure><p id="c9db85cf-7a0a-4422-8642-9ad5c8ec5b60" class="">자바스크립트 코드</p><ol type="1" id="a01326c8-f1c4-4f25-a737-23b4bce5742e" class="numbered-list" start="1"><li>파서에 전달 </li></ol><ol type="1" id="df6eeab8-a05d-4fa7-891e-80e88e2085c4" class="numbered-list" start="2"><li>추상구문 트리 만들어짐</li></ol><ol type="1" id="6158348c-1675-41e2-8b86-8de2c4962f9e" class="numbered-list" start="3"><li>이그니션 인터프리터에 전달 → 이그니션 추상 구문트리</li></ol><ol type="1" id="fc73bd57-a4d9-4bd4-ba50-61b91b51099f" class="numbered-list" start="4"><li>바이트 코드로 만듦</li></ol><ol type="1" id="3d7d300b-ce8d-4d48-b920-c7ce15f678f9" class="numbered-list" start="5"><li>최적화가 필요한 경우 터보팬에 넘김<ol type="a" id="c1371a7e-7059-488e-aff9-67005e679bef" class="numbered-list" start="1"><li>터보팬에서 컴파일 과정을 후 6</li></ol></li></ol><ol type="1" id="f4300b36-8936-4cac-bbb7-4f68b74b4d2b" class="numbered-list" start="6"><li>바이너리 코드 제작<ol type="a" id="c60f7995-a038-46ad-8059-4cdcc70d262d" class="numbered-list" start="1"><li>최적화가 안되는경우 7</li></ol></li></ol><ol type="1" id="cb8d1f02-fdea-4003-85e0-557fbb0e1ab8" class="numbered-list" start="7"><li>다시 최적화를 해제하고 이그니션의 인터프리터 기능을 사용</li></ol><p id="895ee0ec-0871-495f-afad-f29fb48d4f0e" class="">
+</p><ul id="7e330a06-f39f-4108-825d-2bd47e037e2b" class="bulleted-list"><li style="list-style-type:disc">인터프리터와 컴파일러의 장점을 동시에 가지고 있는 프로그램을 JlT(just-1ntime) 컴파일러라고 함<ul id="ab41aaec-7a1a-4dbd-9c5d-1b05e8814889" class="bulleted-list"><li style="list-style-type:circle">단점 : 컴파일과 인터프리터 동시에 실행으로 메모리를 더 많이 씀<figure id="8fec3807-8cdf-4646-8b66-c2690392e343" class="image"><a href="2%20%E1%84%8B%E1%85%A1%E1%86%AF%E1%84%8B%E1%85%A1%E1%84%83%E1%85%AE%E1%84%86%E1%85%A7%E1%86%AB%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%80%E1%85%A2%E1%84%87%E1%85%A1%E1%86%AF%E1%84%8C%E1%85%A1%E1%84%85%E1%85%B3%E1%86%AF%20%E1%84%8B%E1%85%B1%E1%84%92%E1%85%A1%E1%86%AB%20%E1%84%8C%E1%85%B5%E1%84%89%E1%85%B5%E1%86%A8%2085a40c953d524e83a235af9588476810/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-08_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_1.14.51.png"><img style="width:524px" src="2%20%E1%84%8B%E1%85%A1%E1%86%AF%E1%84%8B%E1%85%A1%E1%84%83%E1%85%AE%E1%84%86%E1%85%A7%E1%86%AB%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%80%E1%85%A2%E1%84%87%E1%85%A1%E1%86%AF%E1%84%8C%E1%85%A1%E1%84%85%E1%85%B3%E1%86%AF%20%E1%84%8B%E1%85%B1%E1%84%92%E1%85%A1%E1%86%AB%20%E1%84%8C%E1%85%B5%E1%84%89%E1%85%B5%E1%86%A8%2085a40c953d524e83a235af9588476810/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-08_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_1.14.51.png"/></a></figure></li></ul></li></ul><p id="6acb9fc0-d911-4917-9d25-e6f3a2c17ac0" class="">
+</p><hr id="7f890884-854b-48cb-aa7e-0441768dd000"/><p id="69954d69-94df-435c-9031-9fc0ecebb80d" class="">
+</p><ul id="a5c3b59e-dec1-4324-93e2-5b0211092227" class="bulleted-list"><li style="list-style-type:disc">이벤트 루프와 운영체제 단 API 및 스레드 풀을 지원하는 libuv<ul id="53a20d9a-6d3e-4dd3-bff0-7585da4dfde5" class="bulleted-list"><li style="list-style-type:circle">libuv<ul id="727127fe-4b31-4f00-b35b-e5e470da5904" class="bulleted-list"><li style="list-style-type:square">HTTP, 파일, 소켓 통신IO 기능 등 자바스크립트에 없는 기능 제공</li></ul><ul id="3e8bd83b-a50d-40f5-976a-6befa481c623" class="bulleted-list"><li style="list-style-type:square">C++ 라이브러리를 이용하여 해결(C++ 바인딩)</li></ul><ul id="6623f362-fbf3-43f4-8661-e01b6a8c531a" class="bulleted-list"><li style="list-style-type:square">비동기 입출력, 이벤트 기반에 초점을 맞춘 라이브러리</li></ul><figure id="325b0933-02b8-4703-a891-5ac4fd35befd" class="image"><a href="2%20%E1%84%8B%E1%85%A1%E1%86%AF%E1%84%8B%E1%85%A1%E1%84%83%E1%85%AE%E1%84%86%E1%85%A7%E1%86%AB%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%80%E1%85%A2%E1%84%87%E1%85%A1%E1%86%AF%E1%84%8C%E1%85%A1%E1%84%85%E1%85%B3%E1%86%AF%20%E1%84%8B%E1%85%B1%E1%84%92%E1%85%A1%E1%86%AB%20%E1%84%8C%E1%85%B5%E1%84%89%E1%85%B5%E1%86%A8%2085a40c953d524e83a235af9588476810/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-08_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_1.20.26.png"><img style="width:501px" src="2%20%E1%84%8B%E1%85%A1%E1%86%AF%E1%84%8B%E1%85%A1%E1%84%83%E1%85%AE%E1%84%86%E1%85%A7%E1%86%AB%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%80%E1%85%A2%E1%84%87%E1%85%A1%E1%86%AF%E1%84%8C%E1%85%A1%E1%84%85%E1%85%B3%E1%86%AF%20%E1%84%8B%E1%85%B1%E1%84%92%E1%85%A1%E1%86%AB%20%E1%84%8C%E1%85%B5%E1%84%89%E1%85%B5%E1%86%A8%2085a40c953d524e83a235af9588476810/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-08_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_1.20.26.png"/></a></figure></li></ul><p id="866888e6-9699-4e2e-9f44-4e4d656238c8" class="">
+</p></li></ul><hr id="2893da93-cc58-4037-8e49-de908854bea5"/><p id="4ffa24c1-398c-4763-9c2f-e771fcbd2d16" class="">
+</p><ul id="b4841890-057c-4877-a453-c9b4600ab62a" class="bulleted-list"><li style="list-style-type:disc">Node.js 아키텍쳐<figure id="273bbe1a-04e6-4a0c-9dda-56a7d52e1482" class="image"><a href="2%20%E1%84%8B%E1%85%A1%E1%86%AF%E1%84%8B%E1%85%A1%E1%84%83%E1%85%AE%E1%84%86%E1%85%A7%E1%86%AB%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%80%E1%85%A2%E1%84%87%E1%85%A1%E1%86%AF%E1%84%8C%E1%85%A1%E1%84%85%E1%85%B3%E1%86%AF%20%E1%84%8B%E1%85%B1%E1%84%92%E1%85%A1%E1%86%AB%20%E1%84%8C%E1%85%B5%E1%84%89%E1%85%B5%E1%86%A8%2085a40c953d524e83a235af9588476810/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-08_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_1.22.14.png"><img style="width:516px" src="2%20%E1%84%8B%E1%85%A1%E1%86%AF%E1%84%8B%E1%85%A1%E1%84%83%E1%85%AE%E1%84%86%E1%85%A7%E1%86%AB%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%80%E1%85%A2%E1%84%87%E1%85%A1%E1%86%AF%E1%84%8C%E1%85%A1%E1%84%85%E1%85%B3%E1%86%AF%20%E1%84%8B%E1%85%B1%E1%84%92%E1%85%A1%E1%86%AB%20%E1%84%8C%E1%85%B5%E1%84%89%E1%85%B5%E1%86%A8%2085a40c953d524e83a235af9588476810/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-08_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_1.22.14.png"/></a></figure></li></ul><ol type="1" id="09ad7e27-a28f-45c0-b159-fe1e79b5ba66" class="numbered-list" start="1"><li>애플리케이션 요청발생<ol type="a" id="84d789e8-b529-484f-a27c-f6cd2e767b1c" class="numbered-list" start="1"><li>V8엔진은 자바슨크립트 코드로 된 요청을 바이트 코드나 기계어로 변경합니다.</li></ol></li></ol><ol type="1" id="ab039d08-3ebc-4dd5-85fe-27644f57fe04" class="numbered-list" start="2"><li>자바스크립트로 작성된 Node.js의 API는 C++로 작성된 코드를 사용합니다. </li></ol><ol type="1" id="e8f79ae0-d2aa-45ef-9b5b-980e3d11b2ce" class="numbered-list" start="3"><li>V8 엔진은 이벤트 루프로 libuv를 사용하고 전달된 요청을 libuv 내부의 이벤트 큐<br/>에 추가합니다. <br/></li></ol><ol type="1" id="0ca3f695-aa85-4b22-aa26-0fe01b1feb99" class="numbered-list" start="4"><li>이벤트 큐에 쌓인 요청은 이벤트 루프에 전달되고, <br/>운영체제 커널에 비동기 처리를 맡깁니다. <br/>운영체제 내부적으로 비동기 처리가 힘든 경우(DB, DNS 룩업, 파일 처리 등)는 워커 스레드에서 처리합니다<br/></li></ol><ol type="1" id="271a5ae3-d330-4103-97a2-b1075a52ab80" class="numbered-list" start="5"><li>운영체제의 커널 또는 워커 스레드가 완료한 작업은 다시 이벤트 루프로 전달됩니다</li></ol><ol type="1" id="58df4f07-92bd-49f2-9feb-83cfe167d796" class="numbered-list" start="6"><li>이벤트 루프에서는 콜백으로 전달된 요청에 대한 완료 처리를 하고 넘깁니다.</li></ol><ol type="1" id="6eeaac50-dde8-4acf-a98f-e6af87a783fe" class="numbered-list" start="7"><li>완료 처리된 응답을 Node.js 애플리케이션으로 전달합니다.</li></ol><p id="fe65b959-61d7-4d9f-b55f-84d63e53e0be" class="">
+</p><ul id="181ff2dd-4a3b-4cbf-b2a0-c013c673e7b7" class="bulleted-list"><li style="list-style-type:disc">싱글 스레드라고 했는데 워커스레드가 있으면 싱글이 아니지 않나?<ul id="c4e4256c-1d2c-47ca-9336-f2806c5277a1" class="bulleted-list"><li style="list-style-type:circle">Node.js의 프로세스는 이벤트루프에 사용하는 싱글스레드</li></ul><ul id="dfcf1c16-28b0-4b13-ae7f-7a331995cd6a" class="bulleted-list"><li style="list-style-type:circle">libuv 내부의 비동기 처리를 지원하는 스레드 풀로 구성</li></ul><p id="273efc2b-11b1-432f-b705-213eb15a4b4e" class="">
+</p></li></ul><hr id="2b1979fb-04e8-434e-81d1-de983e27e6fb"/><p id="144105d3-3d1d-4363-b500-598390a1e2ba" class="">
+</p><ul id="b9bf94bd-1d35-4a1c-be24-6ca98d5bb612" class="bulleted-list"><li style="list-style-type:disc">Node.js의 기술적인 특징<ul id="efb3aea7-0b5f-498c-910d-851d3eb22fa2" class="bulleted-list"><li style="list-style-type:circle">싱글스레드<ul id="8a28d834-b712-468b-b01b-f66c182a4f94" class="bulleted-list"><li style="list-style-type:square">자바스크립트 엔진(V8)은 자바스크립트를 실행하는 힙과 콜스택을 가짐</li></ul><ul id="c6759eef-7bc9-4fdb-8a21-1b53d5c7e33e" class="bulleted-list"><li style="list-style-type:square">싱글 스레드 실행</li></ul><ul id="d7f37690-eb80-4369-b5b1-5f2661155f1e" class="bulleted-list"><li style="list-style-type:square">싱글스레드 = 콜스택이 하나</li></ul><ul id="cad216f8-308e-4a10-9c70-2f046e158650" class="bulleted-list"><li style="list-style-type:square">한번에 하나의 작업만<figure id="0113aab5-345b-44ed-9262-1f86019c80f9" class="image"><a href="2%20%E1%84%8B%E1%85%A1%E1%86%AF%E1%84%8B%E1%85%A1%E1%84%83%E1%85%AE%E1%84%86%E1%85%A7%E1%86%AB%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%80%E1%85%A2%E1%84%87%E1%85%A1%E1%86%AF%E1%84%8C%E1%85%A1%E1%84%85%E1%85%B3%E1%86%AF%20%E1%84%8B%E1%85%B1%E1%84%92%E1%85%A1%E1%86%AB%20%E1%84%8C%E1%85%B5%E1%84%89%E1%85%B5%E1%86%A8%2085a40c953d524e83a235af9588476810/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-08_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_1.38.54.png"><img style="width:159px" src="2%20%E1%84%8B%E1%85%A1%E1%86%AF%E1%84%8B%E1%85%A1%E1%84%83%E1%85%AE%E1%84%86%E1%85%A7%E1%86%AB%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%80%E1%85%A2%E1%84%87%E1%85%A1%E1%86%AF%E1%84%8C%E1%85%A1%E1%84%85%E1%85%B3%E1%86%AF%20%E1%84%8B%E1%85%B1%E1%84%92%E1%85%A1%E1%86%AB%20%E1%84%8C%E1%85%B5%E1%84%89%E1%85%B5%E1%86%A8%2085a40c953d524e83a235af9588476810/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-08_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_1.38.54.png"/></a></figure></li></ul></li></ul></li></ul><p id="a0402da8-adb9-4b87-930a-170d4bcad461" class="">
+</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="e3245c00-590c-41bc-b937-2fe0556dfe4a" class="code"><code class="language-JavaScript">function funcl() {
+console.log(&quot;l&quot;);
+func2();
+return;
+}
+싱글스레드의 콜스택
+function func2() {
+console.log(&quot;2&quot;);
+return;
+}
+funcl();
+
+/*
+정답
+1
+2S
+*/</code></pre><figure id="ddf60758-7176-4d7e-92a6-5c6b1dbfadb7" class="image" style="text-align:left"><a href="2%20%E1%84%8B%E1%85%A1%E1%86%AF%E1%84%8B%E1%85%A1%E1%84%83%E1%85%AE%E1%84%86%E1%85%A7%E1%86%AB%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%80%E1%85%A2%E1%84%87%E1%85%A1%E1%86%AF%E1%84%8C%E1%85%A1%E1%84%85%E1%85%B3%E1%86%AF%20%E1%84%8B%E1%85%B1%E1%84%92%E1%85%A1%E1%86%AB%20%E1%84%8C%E1%85%B5%E1%84%89%E1%85%B5%E1%86%A8%2085a40c953d524e83a235af9588476810/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-08_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_1.41.06.png"><img style="width:417px" src="2%20%E1%84%8B%E1%85%A1%E1%86%AF%E1%84%8B%E1%85%A1%E1%84%83%E1%85%AE%E1%84%86%E1%85%A7%E1%86%AB%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%80%E1%85%A2%E1%84%87%E1%85%A1%E1%86%AF%E1%84%8C%E1%85%A1%E1%84%85%E1%85%B3%E1%86%AF%20%E1%84%8B%E1%85%B1%E1%84%92%E1%85%A1%E1%86%AB%20%E1%84%8C%E1%85%B5%E1%84%89%E1%85%B5%E1%86%A8%2085a40c953d524e83a235af9588476810/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-08_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_1.41.06.png"/></a></figure><ol type="1" id="5ab66747-d332-455b-8fdf-af21b54a67c4" class="numbered-list" start="1"><li>코드에서 func1()을 최초로 실행하므로 func1()이 콜 스택에 추가</li></ol><ol type="1" id="52e2951c-b635-4f12-87e7-7f6e64a0239d" class="numbered-list" start="2"><li>func1() 함수 몸체 첫 번째 줄에 있는 console.log(”1”)이 콜 스택에 추가</li></ol><ol type="1" id="2800dca0-633c-46d5-9d0b-8f687ce7b5af" class="numbered-list" start="3"><li>console.log(“1”) 함수가 실행 완료되어 1이 출력되고, <br/>console.log(“1”) 함수는 콜스택에서 제거됩니다.<br/></li></ol><ol type="1" id="5ab9a0c7-cf50-44c1-a390-4b31796643d2" class="numbered-list" start="4"><li>콜스택에 func2() 함수가 콜 스택에 추가</li></ol><ol type="1" id="e58e741b-ed37-4bcd-84c6-b91f467785c4" class="numbered-list" start="5"><li>func2()에 있는 console.log(“2”) 함수가 콜 스택에 추가</li></ol><ol type="1" id="014c791e-836e-474d-8c32-86f398eb2201" class="numbered-list" start="6"><li>console.log(“2”) 함수가 실행 완료되어 2가 출력되고, <br/>console.log(“2”) 함수는 콜 스택에서 제거<br/></li></ol><ol type="1" id="14a85d6e-f8f2-40a1-9e62-7a9a0eb45abb" class="numbered-list" start="7"><li>함수 func2()의 return이 실행되어 종료되고, 콜 스택에서 제거</li></ol><ol type="1" id="f38ce93e-54a9-43bf-8d70-210fc96580ff" class="numbered-list" start="8"><li>함수 func1()의 return이 실행되어 종료되고, 콜 스택에서 제거</li></ol><p id="e3a7ddb1-8864-40e4-8bdc-d9dd2ce893c4" class="">
+</p><hr id="fbae4cb7-bd74-4722-844a-efaf30dde65b"/><p id="6cb889c8-ab53-44e1-aaab-70d54e637eec" class="">
+</p><ul id="1026e4ef-ac17-46ad-be22-3ab5fcdf393e" class="bulleted-list"><li style="list-style-type:disc">이벤트 기반 아키텍처<ul id="5522517a-751d-43a4-be07-2aa0564a671b" class="bulleted-list"><li style="list-style-type:circle">싱글스레드로 동시에 처리 할수 있는 방법</li></ul><ul id="135b910f-0054-4bf6-869b-5801e75724ca" class="bulleted-list"><li style="list-style-type:circle">콜 스택에 쌓인 작업을 다른 곳에서 처리한 다음 처리가 완료되었을 때 알림을 받으면 스레드가 하나라도 빠르게 처리</li></ul><figure id="cecbe3d6-25c5-479b-9177-05a13e6eba93" class="image"><a href="2%20%E1%84%8B%E1%85%A1%E1%86%AF%E1%84%8B%E1%85%A1%E1%84%83%E1%85%AE%E1%84%86%E1%85%A7%E1%86%AB%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%80%E1%85%A2%E1%84%87%E1%85%A1%E1%86%AF%E1%84%8C%E1%85%A1%E1%84%85%E1%85%B3%E1%86%AF%20%E1%84%8B%E1%85%B1%E1%84%92%E1%85%A1%E1%86%AB%20%E1%84%8C%E1%85%B5%E1%84%89%E1%85%B5%E1%86%A8%2085a40c953d524e83a235af9588476810/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-08_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_2.04.57.png"><img style="width:521.9886474609375px" src="2%20%E1%84%8B%E1%85%A1%E1%86%AF%E1%84%8B%E1%85%A1%E1%84%83%E1%85%AE%E1%84%86%E1%85%A7%E1%86%AB%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%80%E1%85%A2%E1%84%87%E1%85%A1%E1%86%AF%E1%84%8C%E1%85%A1%E1%84%85%E1%85%B3%E1%86%AF%20%E1%84%8B%E1%85%B1%E1%84%92%E1%85%A1%E1%86%AB%20%E1%84%8C%E1%85%B5%E1%84%89%E1%85%B5%E1%86%A8%2085a40c953d524e83a235af9588476810/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-08_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_2.04.57.png"/></a></figure><p id="7d155293-6524-4847-b6db-80c6298def60" class="">자바스크립트 코드 →</p><ol type="1" id="079a0a9f-6bf0-44fd-89e7-586491c437d9" class="numbered-list" start="1"><li>V8의 콜스택에 쌓이고 I/O 처리가 필요한 코드는 이벤트 루프로 보내게됨</li></ol><ol type="1" id="2ca0cccd-470e-4e39-8bdb-feeec2521cfb" class="numbered-list" start="2"><li>이벤트 루프에서 루프를 실행하면서 운영체제 또는 스레드 워커에 I/O처리를 맡김</li></ol><ol type="1" id="4c6ebed4-6343-4d3c-82df-935a7d4095d8" class="numbered-list" start="3"><li>스레드 워커와 운영체제는 받은 요청에 대한 결과를 이벤트 루프로 돌려줌</li></ol><ol type="1" id="71569293-39dd-4463-8ccf-4fe8a06a3916" class="numbered-list" start="4"><li>이벤트 루프에서는 결과값에 대한 코드를 콜스택에 다시 추가 </li></ol><p id="d0a22c85-48ed-4cec-b3ca-8a31c05b7749" class="">
+</p></li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="3c8ae627-826c-4af1-b4c5-1746daf52ef3" class="code"><code class="language-JavaScript">console.log(&quot;l&quot;);
+setTimeout(() =&gt; console.log(2), 1000);
+console.log(&quot;3&quot;);
+
+/*
+1
+3
+(1초 후)
+2
+*/</code></pre><p id="d577017d-5e90-4b0d-9bd4-59a181d0c5a8" class="">
+</p><hr id="1bdcf610-1ea5-4ba6-825c-1cd3bc7753e2"/><p id="9c453a8a-836f-471b-88a6-72da16339941" class="">
+</p><ul id="c354a4b1-847e-4c02-aba2-7ad92ed1c2d4" class="bulleted-list"><li style="list-style-type:disc">이벤트 루프 절차</li></ul><figure id="c4247072-c75f-45a8-bf71-e736bb724a1f" class="image"><a href="2%20%E1%84%8B%E1%85%A1%E1%86%AF%E1%84%8B%E1%85%A1%E1%84%83%E1%85%AE%E1%84%86%E1%85%A7%E1%86%AB%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%80%E1%85%A2%E1%84%87%E1%85%A1%E1%86%AF%E1%84%8C%E1%85%A1%E1%84%85%E1%85%B3%E1%86%AF%20%E1%84%8B%E1%85%B1%E1%84%92%E1%85%A1%E1%86%AB%20%E1%84%8C%E1%85%B5%E1%84%89%E1%85%B5%E1%86%A8%2085a40c953d524e83a235af9588476810/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-08_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_2.19.40.png"><img style="width:468.991455078125px" src="2%20%E1%84%8B%E1%85%A1%E1%86%AF%E1%84%8B%E1%85%A1%E1%84%83%E1%85%AE%E1%84%86%E1%85%A7%E1%86%AB%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%80%E1%85%A2%E1%84%87%E1%85%A1%E1%86%AF%E1%84%8C%E1%85%A1%E1%84%85%E1%85%B3%E1%86%AF%20%E1%84%8B%E1%85%B1%E1%84%92%E1%85%A1%E1%86%AB%20%E1%84%8C%E1%85%B5%E1%84%89%E1%85%B5%E1%86%A8%2085a40c953d524e83a235af9588476810/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-08_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_2.19.40.png"/></a></figure><figure id="ac4d374f-f8e6-4912-8bb8-7c347e14798c" class="image"><a href="2%20%E1%84%8B%E1%85%A1%E1%86%AF%E1%84%8B%E1%85%A1%E1%84%83%E1%85%AE%E1%84%86%E1%85%A7%E1%86%AB%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%80%E1%85%A2%E1%84%87%E1%85%A1%E1%86%AF%E1%84%8C%E1%85%A1%E1%84%85%E1%85%B3%E1%86%AF%20%E1%84%8B%E1%85%B1%E1%84%92%E1%85%A1%E1%86%AB%20%E1%84%8C%E1%85%B5%E1%84%89%E1%85%B5%E1%86%A8%2085a40c953d524e83a235af9588476810/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-08_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_2.20.31.png"><img style="width:480px" src="2%20%E1%84%8B%E1%85%A1%E1%86%AF%E1%84%8B%E1%85%A1%E1%84%83%E1%85%AE%E1%84%86%E1%85%A7%E1%86%AB%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%80%E1%85%A2%E1%84%87%E1%85%A1%E1%86%AF%E1%84%8C%E1%85%A1%E1%84%85%E1%85%B3%E1%86%AF%20%E1%84%8B%E1%85%B1%E1%84%92%E1%85%A1%E1%86%AB%20%E1%84%8C%E1%85%B5%E1%84%89%E1%85%B5%E1%86%A8%2085a40c953d524e83a235af9588476810/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-08_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_2.20.31.png"/></a></figure><figure id="ab1268d0-4298-42c5-aec2-e09833e9c3c0" class="image"><a href="2%20%E1%84%8B%E1%85%A1%E1%86%AF%E1%84%8B%E1%85%A1%E1%84%83%E1%85%AE%E1%84%86%E1%85%A7%E1%86%AB%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%80%E1%85%A2%E1%84%87%E1%85%A1%E1%86%AF%E1%84%8C%E1%85%A1%E1%84%85%E1%85%B3%E1%86%AF%20%E1%84%8B%E1%85%B1%E1%84%92%E1%85%A1%E1%86%AB%20%E1%84%8C%E1%85%B5%E1%84%89%E1%85%B5%E1%86%A8%2085a40c953d524e83a235af9588476810/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-08_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_2.21.15.png"><img style="width:480px" src="2%20%E1%84%8B%E1%85%A1%E1%86%AF%E1%84%8B%E1%85%A1%E1%84%83%E1%85%AE%E1%84%86%E1%85%A7%E1%86%AB%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%80%E1%85%A2%E1%84%87%E1%85%A1%E1%86%AF%E1%84%8C%E1%85%A1%E1%84%85%E1%85%B3%E1%86%AF%20%E1%84%8B%E1%85%B1%E1%84%92%E1%85%A1%E1%86%AB%20%E1%84%8C%E1%85%B5%E1%84%89%E1%85%B5%E1%86%A8%2085a40c953d524e83a235af9588476810/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-08_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_2.21.15.png"/></a></figure><figure id="61bb7d71-f833-469f-9c1e-6c5067f71840" class="image"><a href="2%20%E1%84%8B%E1%85%A1%E1%86%AF%E1%84%8B%E1%85%A1%E1%84%83%E1%85%AE%E1%84%86%E1%85%A7%E1%86%AB%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%80%E1%85%A2%E1%84%87%E1%85%A1%E1%86%AF%E1%84%8C%E1%85%A1%E1%84%85%E1%85%B3%E1%86%AF%20%E1%84%8B%E1%85%B1%E1%84%92%E1%85%A1%E1%86%AB%20%E1%84%8C%E1%85%B5%E1%84%89%E1%85%B5%E1%86%A8%2085a40c953d524e83a235af9588476810/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-08_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_2.21.35.png"><img style="width:480px" src="2%20%E1%84%8B%E1%85%A1%E1%86%AF%E1%84%8B%E1%85%A1%E1%84%83%E1%85%AE%E1%84%86%E1%85%A7%E1%86%AB%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%80%E1%85%A2%E1%84%87%E1%85%A1%E1%86%AF%E1%84%8C%E1%85%A1%E1%84%85%E1%85%B3%E1%86%AF%20%E1%84%8B%E1%85%B1%E1%84%92%E1%85%A1%E1%86%AB%20%E1%84%8C%E1%85%B5%E1%84%89%E1%85%B5%E1%86%A8%2085a40c953d524e83a235af9588476810/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-08_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_2.21.35.png"/></a></figure><ul id="2f7d4fb8-24fa-4bea-99bd-5d1c1f3fdbc7" class="bulleted-list"><li style="list-style-type:disc">한마디로 setTimeout 은 node.js API이므로 영역으로 전달받아 주어진 시간 대기 후</li></ul><ul id="c4251df2-94f6-4e83-a8bb-f23860f799b7" class="bulleted-list"><li style="list-style-type:disc">시간 되면 태스크 큐로 추가되고</li></ul><ul id="f584f473-f77f-41c4-a5d1-b7a4a02c6df9" class="bulleted-list"><li style="list-style-type:disc">콜스택에 올라가서 </li></ul><ul id="c2c7892f-57b6-4a7c-96f2-eccd250db04c" class="bulleted-list"><li style="list-style-type:disc">출력된다. </li></ul><ul id="9a99f289-ef12-47b5-a7d0-a83861df2951" class="bulleted-list"><li style="list-style-type:disc">!!! 시간이 0이라도 setTimeout은 node.js API이므로 <br/>영역으로 전달 받아서 시간만 다를뿐 출력은 같다<br/></li></ul><p id="dbe9c8e7-c6ee-4d52-9fcf-2d3c8f98cc3f" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
