@@ -1,0 +1,840 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>3. node.js로 백엔드 입문하기</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="837f4a04-b016-4b49-9fe7-488b98a37ef4" class="page sans"><header><h1 class="page-title">3. node.js로 백엔드 입문하기</h1><p class="page-description"></p></header><div class="page-body"><ul id="b84669ac-9961-4534-b681-1b5679866ee3" class="bulleted-list"><li style="list-style-type:disc">모든 요청에 ok를 반환하는서버<ul id="4c4338e7-1a75-4dbc-97a7-1b75abe245a6" class="bulleted-list"><li style="list-style-type:circle">모든 요청에 ok를 반환해주는 서버</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1495df45-1cb8-460b-b21d-281f48a17ecd" class="code"><code class="language-JavaScript">const http = requireC&#x27;http&quot;);
+const server = http.createServer((req, res) =&gt; {
+res.setHeader(&quot;Content-Type&quot;, &quot;text/html&quot;); // 1 응답의 헤더 숼정
+res.end(&quot;OK&quot;); // 2 &quot;OK&quot;를 응답하고 종료
+})；
+server.Usten(&quot;3000&quot;, () =&gt; console.log(&quot;0K 서버 시작!&quot;)); // 3 접속 대기</code></pre><ol type="1" id="20934f69-2501-49ee-8b76-2d56c71bf378" class="numbered-list" start="1"><li>응답의 헤더값 설정(html로 해석)</li></ol><ol type="1" id="ae125085-fae6-4fbb-ba44-cd82fc6a5a4c" class="numbered-list" start="2"><li>“OK”를 전달하고 응답을 종료하며 “OK”대신 숫자나 파일같은 데이터가 들어갈 수도 있음<ol type="a" id="939fccd9-2908-48f8-83b4-33e582c3ed66" class="numbered-list" start="1"><li>예제는 <strong>res.end(“OK”).listen(/*</strong>중간 생략*/) 같은 형태로 연결해서 사용</li></ol></li></ol><ol type="1" id="d44ecb45-ff83-4c70-b33c-30d982ff8446" class="numbered-list" start="3"><li>createServerO로 서버 인스턴스를 생성하고, 그 뒤에 listenO 함수를 붙여서 실행</li></ol><p id="bc48d90a-a764-4180-b181-0b3566c2b290" class="">
+</p></li></ul><hr id="5565c78a-22db-4002-b1ac-55b8c7cbe64d"/><ul id="64f38f2d-ae76-4280-84bd-b088866b2ceb" class="bulleted-list"><li style="list-style-type:disc">라우터 만들기<ul id="4e852d4b-71be-462d-b27e-1dfc7bbcd8ef" class="bulleted-list"><li style="list-style-type:circle">모든 요청에 OK응답도 좋지만 일반적인 웹서버는  경로에 따른 응답을 줌<br/>이러한기능을 라우팅이라고 함  URL 형식과 구성요소는 아래<br/><figure id="27a31e11-2e13-439d-b951-e0be55d1ba45" class="image"><a href="3%20node%20js%E1%84%85%E1%85%A9%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%86%E1%85%AE%E1%86%AB%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20837f4a04b0164b499fe7488b98a37ef4/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-28_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%2592%25E1%2585%25AE_10.11.59.png"><img style="width:620px" src="3%20node%20js%E1%84%85%E1%85%A9%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%86%E1%85%AE%E1%86%AB%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20837f4a04b0164b499fe7488b98a37ef4/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-28_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%2592%25E1%2585%25AE_10.11.59.png"/></a></figure></li></ul><ul id="2641e23c-a0ba-48bc-aab8-131f8624feaf" class="bulleted-list"><li style="list-style-type:circle">URL에 포함하는 정보를 표현하면 다음 그림과 같습니다.<figure id="757eb817-887c-4553-ae8f-43bb01dab241" class="image"><a href="3%20node%20js%E1%84%85%E1%85%A9%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%86%E1%85%AE%E1%86%AB%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20837f4a04b0164b499fe7488b98a37ef4/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-28_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%2592%25E1%2585%25AE_10.13.26.png"><img style="width:630.9943237304688px" src="3%20node%20js%E1%84%85%E1%85%A9%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%86%E1%85%AE%E1%86%AB%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20837f4a04b0164b499fe7488b98a37ef4/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-28_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%2592%25E1%2585%25AE_10.13.26.png"/></a></figure></li></ul><ul id="7f624483-6d3b-4385-aa0a-4de738c0d5ee" class="bulleted-list"><li style="list-style-type:circle">HREF : Hypertext REFerence, 즉 URL 구조를 간략하게 나타낸 그림이며 이제 URL의 pathname에 있는 정보를활용하는 라우터를 제작 </li></ul></li></ul><ul id="1e9f3a2d-055f-4133-8715-226a471f1434" class="bulleted-list"><li style="list-style-type:disc">01 localhost：3000/user와 localhost：3000/feed라는 두 URLO| 있다고 가정하고 두 요청에 대해 다른 응답을 주는 코드를 작성<ul id="290886f9-f69e-476d-9ce7-ec15320623cd" class="bulleted-list"><li style="list-style-type:circle">user와 feed 요청을 처리하는 서버</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="7f8d22d9-9584-415f-aba0-8dcb2d1aa3cf" class="code"><code class="language-JavaScript">const http = require(&quot;http&quot;);
+const url = require(&quot;url&quot;); // ❶ url 모듈을 로딩
+http
+  .createServer((req, res) =&gt; {
+    const path = url.parse(req.url, true).pathname; // ❷ 패스명 할당
+    res.setHeader(&quot;Content-Type&quot;, &quot;text/html; charset=utf-8&quot;);
+
+    if (path === &quot;/user&quot;) {
+      res.end(&quot;[user] name : andy, age: 30&quot;); // ❸ /user 결과값 설정
+    } else if (path === &quot;/feed&quot;) {
+      res.end(`&lt;meta charset=&quot;UTF-8&quot;&gt;&lt;ul&gt;
+            &lt;li&gt;picture1&lt;/li&gt;
+            &lt;li&gt;picture2&lt;/li&gt;
+            &lt;li&gt;picture3&lt;/li&gt;
+          &lt;/ul&gt;
+      `); // ➍ /feed에 대한 결과값 설정 
+    } else {
+      res.statusCode = 404;
+      res.end(&quot;404 page not found&quot;); // ➎ 결과값으로 에러 메세지 설정
+    }
+  })
+  .listen(&quot;3000&quot;, () =&gt; console.log(&quot;라우터를 만들어보자!&quot;));
+</code></pre><ol type="1" id="8f467446-a87b-4d7e-b6bc-96553188535a" class="numbered-list" start="1"><li>url 모듈을 로딩하고 url변수에 할당</li></ol><ol type="1" id="d7b9af77-7599-4f44-ac99-13e01c9b503a" class="numbered-list" start="2"><li>url 모듈을 사용해 요청(req)으로 받은 url의 pathname을 얻어냄.<br/>url이 “localhost：3000/user”라면 pathname은 “/user”가 됩니다. parse() 함수의 두 번째<br/>인수로 있는 true는 쿼리 스트링도 함께 파싱할지 여부를 설정하는 변수입니다. 경로명 다음의 ? 기호 뒤에 키=값의 형태로붙입니다. 여기서는 쿼리 스트링을 파싱해도 결과에는 변화가 없습니다만, true로 하겠습니다.<br/></li></ol><ol type="1" id="d3dd7192-c05d-4407-95c8-1dbbd83fc12a" class="numbered-list" start="3"><li>/user로 요청이 온 경우 응답입니다. “[user] name : andy, age : 30”을 보냅니다.</li></ol><p id="d96ae696-dd4d-46b3-8fc5-eba2e41481d8" class="">쿼리스트링 :  HTTP요청을 보낼 때 사용자가 원하는 값을 보내는 방식임. 경로값 뒤에 ? 붙인다음 키=값 형식으로 사용할 수 있음. 여러개일때 &amp;로 구분해 추가함</p></li></ul><ul id="4d860352-551a-46f2-bab6-f01b1aa7759d" class="bulleted-list"><li style="list-style-type:disc">02 localhost：3000/user 주소를 브라우저에서 입력 후 접속<ul id="c67a0bdf-afb7-4bd8-9915-48fd3fc240a9" class="bulleted-list"><li style="list-style-type:circle">다음그림과 같이 응답을 출력하면 정상동작</li></ul><ol type="1" id="bb5b5b25-6dbe-42bc-bacc-8cd9005eab95" class="numbered-list" start="4"><li>요청이 /feed로 온 경우 응답입니다.<br/>콘텐츠 타입이 text/html이므로 응답으로 받은 문자열을 브라우저에 HTML로 해석합니다.<br/>브라우저에 <br/><a href="http://localhost:3000/feed로">localhost:3000/feed로</a> 접속을 하면 다음과같은 목록보임</li></ol><ol type="1" id="4db74f22-fb8f-405e-9ba0-211e2119028a" class="numbered-list" start="5"><li>/user와 /feed 이외의 요청은 페이지가 없다는 404 에러를 보내줌 </li></ol></li></ul><p id="e5fde222-cf95-4a85-988a-4535a53a3ac8" class="">
+</p><p id="b6aea746-9678-43c0-9a6c-22cff6dfbca5" class="">지금까지 url 모듈과 if 문 사용하여 간단한 라우터를 구현함</p><p id="83656683-c94d-455a-8507-318db1277a38" class="">
+</p><hr id="b1e91bf6-d291-411e-aed1-85fc09605870"/><p id="f241d6b5-8c4f-40bf-b548-9c4e321f8b70" class="">
+</p><p id="13dfa01c-06db-46ef-952f-a6ef5948d44f" class="">3.3 createServer()리팩터링하기</p><p id="ee421f55-f9a9-4ce2-8960-eeefe902634b" class="">리팩터링 : 동작결과를 변경하지않으면서 코드의 구조를 재조정하는 작업(가독성, 유지보수 업)</p><p id="9db42220-cabe-42e7-ae61-99e69637ad47" class="">현재는 createServer()안의 콜백함수에 모든 코드를 다 추가해야 하므로 좋지않음</p><p id="9e0058de-47f2-4873-95b4-807bd2370a3c" class="">라우팅 이후 처리를 별도의 함수를 만들어 처리하는 코드로 리팩토링</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="c2928908-0d3e-4885-9539-3dfa0eae6a6f" class="code"><code class="language-JavaScript">const http = require(&quot;http&quot;);
+const url = require(&quot;url&quot;);
+http
+  .createServer((req, res) =&gt; {
+    const path = url.parse(req.url, true).pathname;
+    res.setHeader(&quot;Content-Type&quot;, &quot;text/html&quot;);
+    if (path === &quot;/user&quot;) {
+      user(req, res); // 1 user() 함수 실행
+    } else if (path === &quot;/feed&quot;) {
+      feed(req, res); // 2 feed() 함수 실행
+    } else {
+      notFound(req, res); // 3 notFound()함수 실행
+    }
+  })
+  .listen(&quot;3000&quot;, () =&gt; console.log(&quot;라우터를 만들어보자!&quot;));
+
+const user = (req, res) =&gt; {
+  res.end(`[user] name : andy, age: 30`);
+};
+
+const feed = (req, res) =&gt; {
+  res.end(`&lt;ul&gt;
+        &lt;li&gt;picture1&lt;/li&gt;
+        &lt;li&gt;picture2&lt;/li&gt;
+        &lt;li&gt;picture3&lt;/li&gt;
+      &lt;/ul&gt;
+      `);
+};
+
+const notFound = (req, res) =&gt; {
+  res.statusCode = 404;
+  res.end(&quot;404 page not found&quot;);
+};
+</code></pre><ol type="1" id="0026098f-eef8-4cb9-8246-4714d92c464e" class="numbered-list" start="1"><li>/user 요청을 처리하는 코드를 user()함수로,</li></ol><ol type="1" id="c3dbaea8-00e2-4619-8f33-a35c86cdaf70" class="numbered-list" start="2"><li>/path 요청을 처리하는코드를 feed()함수로,</li></ol><ol type="1" id="283fe752-b3c0-40df-b86b-030d3a88ef84" class="numbered-list" start="3"><li>path가 없을때 notFound()함수로 분리</li></ol><p id="67f9a49e-859b-430e-90e2-cad034d70f27" class="">메인루틴을 깔끔하게 유지하면서 요청졀 함수만 요구사항헤 맞게 변경하는 코드 됨</p><hr id="a21aa52d-4ce9-4944-9693-d16e41338517"/><p id="70bae07c-d4b1-4e9e-b5da-dc2d9d94ca9b" class="">
+</p><p id="07e3f53d-4020-4b03-b96d-74b8c19683bd" class="">3.4 동적으로 응답하기</p><p id="795fddd9-a2be-4149-a428-751c83b9246c" class="">앞 작성한 서버는 브라우저에 호스트 접속하면 언제나 같은결과를 보여줍니다. user() 함수를 수정해서 매겨변수에 따라 동적으로 응답이 변경되도록 함</p><p id="10df08af-92a0-4e5e-b005-e27d79787c41" class="">user()함수는 응답으로 고정된 name와 age정보를 반환함</p><p id="ca5dcf65-1679-44b0-84d4-53607af49766" class="">url의 query 부분에 name와 age 정보를 추가함</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="34284620-0459-41d4-9a6c-c31d86c9bbe2" class="code"><code class="language-JavaScript">const http = require(&quot;http&quot;);
+const url = require(&quot;url&quot;);
+http
+  .createServer((req, res) =&gt; {
+    const path = url.parse(req.url, true).pathname;
+    res.setHeader(&quot;Content-Type&quot;, &quot;text/html&quot;);
+    if (path === &quot;/user&quot;) {
+      user(req, res); // 1 
+    } else if (path === &quot;/feed&quot;) {
+      feed(req, res); // 2
+    } else {
+      notFound(req, res); // 3
+    }
+  })
+  .listen(&quot;3000&quot;, () =&gt; console.log(&quot;라우터를 만들어보자!&quot;));
+
+//////////////////////////////////////
+
+const user = (req, res) =&gt; {
+  const userInfo = url.parse(req.url, true).query;
+  // 1 쿼리스트링데이터를 userInfo에 할당
+  res.end(`[user] name : ${userInfo.name}, age: ${userInfo.age}`);
+  // 2 결과값으로 이름과 나이 설정
+};
+
+//////////////////////////////////////
+
+const feed = (req, res) =&gt; {
+  res.end(`&lt;ul&gt;
+        &lt;li&gt;picture1&lt;/li&gt;
+        &lt;li&gt;picture2&lt;/li&gt;
+        &lt;li&gt;picture3&lt;/li&gt;
+      &lt;/ul&gt;
+      `);
+};
+
+const notFound = (req, res) =&gt; {
+  res.statusCode = 404;
+  res.end(&quot;404 page not found&quot;);
+};
+</code></pre><p id="97144d3b-0298-4fc7-8a4f-6b081305d948" class="">
+</p><p id="08f9995a-fd5f-4a39-afa9-5d25c71d7e3b" class=""><a href="http://localhost:3000/user?name=lhg%20&amp;age=20">http://localhost:3000/user?name=lhg &amp;age=20</a></p><p id="436ebd49-c1c5-4ac6-8142-e0977436089f" class="">쿼리스트링으로 이용하여 값을 넣음</p><p id="fa586860-cb02-411f-857e-a6db53d66588" class="">
+</p><hr id="4f8af9f5-7064-495e-bc2c-02baeedf8149"/><p id="40d1a341-0c24-46d9-83ad-a57f61487529" class="">
+</p><p id="d937aa3a-731f-4ae4-9446-b03ed49630cd" class="">3.5 라우터 리팩터링하기</p><p id="9e858209-c6a5-4e71-a091-10845415c535" class="">함수가 user()포함 3개 만약 100넘어가면 유지보수힘듬 분기문에 사용되는 매개변수가 같은 패턴을 보일때 맵자료구조가 유용 맵분기문 사용하면 깔끔</p><p id="33b1815d-851c-41a0-a309-52c5c11a3b63" class="">
+</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="628439ab-ec5b-4e36-8851-987ba3e3dc3e" class="code"><code class="language-JavaScript">const http = require(&quot;http&quot;);
+const url = require(&quot;url&quot;);
+
+http
+  .createServer((req, res) =&gt; {
+    const path = url.parse(req.url, true).pathname;
+    res.setHeader(&quot;Content-Type&quot;, &quot;text/html&quot;);
+    if (path in urlMap) {  // 1 userMap에 path가 있는지 확인
+      try {
+        urlMap[path](req, res); // 2 userMap에 path값으로 매핑된 함수 실행
+      } catch (err) {
+        console.log(err);
+        serverError(req, res); 
+      }
+    } else {
+      notFound(req, res);
+    }
+  })
+  .listen(&quot;3000&quot;, () =&gt; console.log(&quot;라우터를 리팩토링해보자!&quot;));
+
+const user = (req, res) =&gt; {
+  throw Error(&quot;!!!&quot;);
+  const user = url.parse(req.url, true).query;
+  res.end(`[user] name : ${user.name}, age: ${user.age}`);
+};
+
+const feed = (req, res) =&gt; {
+  res.end(`&lt;ul&gt;
+        &lt;li&gt;picture1&lt;/li&gt;
+        &lt;li&gt;picture2&lt;/li&gt;
+        &lt;li&gt;picture3&lt;/li&gt;
+      &lt;/ul&gt;
+      `);
+};
+
+const notFound = (req, res) =&gt; {
+  res.statusCode = 404;
+  res.end(&quot;404 page not found&quot;);
+};
+
+const serverError = (req, res) =&gt; {
+  res.statusCode = 500;
+  res.end(&quot;500 server error&quot;);
+};
+
+// 3 라우터 규칙 매핑 키로 path가 들어가고 값에 함수를 할당
+const urlMap = {
+  &quot;/&quot;: (req, res) =&gt; res.end(&quot;HOME&quot;),
+  &quot;/user&quot;: user,
+  &quot;/feed&quot;: feed,
+};
+</code></pre><ol type="1" id="801a72ad-9967-4d0e-b21e-7bcdbcaa1478" class="numbered-list" start="1"><li>객체와 함께 in 연산자를사용하면 객체의 키가 있는지 검사 <figure id="64f152b8-95eb-4ddc-b839-c6b748803814" class="image"><a href="3%20node%20js%E1%84%85%E1%85%A9%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%86%E1%85%AE%E1%86%AB%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20837f4a04b0164b499fe7488b98a37ef4/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-28_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%2592%25E1%2585%25AE_11.33.56.png"><img style="width:526.9886474609375px" src="3%20node%20js%E1%84%85%E1%85%A9%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%86%E1%85%AE%E1%86%AB%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20837f4a04b0164b499fe7488b98a37ef4/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-28_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%2592%25E1%2585%25AE_11.33.56.png"/></a></figure></li></ol><ol type="1" id="0d74860f-5405-4d66-93f2-0f10d5831218" class="numbered-list" start="2"><li>userMap[키]를 넣으면 키에 해당하는 값을 반환<br/>키로 path를 넣으면 값인 함수가 반환 <br/></li></ol><ol type="1" id="98e08acb-6fd8-40d4-b68a-4a1b6d018a9b" class="numbered-list" start="3"><li>자바스크립트에서 객체라고 부르기도 하지만 키값이 있는 객체이므로 맵으로 이름 지음 <br/>자바스크립트는 함수가 일급객체임<br/><ol type="a" id="18d88f24-1b0d-42c4-9764-ccf914d13776" class="numbered-list" start="1"><li>일급객체는 값이 할당이가능하고 함수의 결과로 반환받을수도 있음</li></ol><ol type="a" id="f877fdc6-3b96-408d-b99e-a6f8daade56d" class="numbered-list" start="2"><li>코드 가장 하단에 urlMap을 추가한 이유는 user()와 feed()함수보다 위에 있으면 에러남<ol type="i" id="0c76e83a-baed-46ff-8c41-1f620a3fc9fd" class="numbered-list" start="1"><li>선언전에 읽을수 없기때문</li></ol></li></ol><ol type="a" id="589c0544-a12a-460d-b21e-c258b2ca355b" class="numbered-list" start="3"><li>호이스팅은 함수 클래스 변수를 끌어올려서 선언되기 전에 사용하는 기능<ol type="i" id="20edc825-9738-43c1-9c79-e57c9a2b1ad8" class="numbered-list" start="1"><li>자바스크립트에서는 var로 선언한 변수나 함수 그리고 클래스 선언에 호이스팅</li></ol><ol type="i" id="a2e7e07d-72e2-4567-9f82-0987f52286a6" class="numbered-list" start="2"><li>아래와 같이 코드 쓰면 선언이 끌어올려졌다는 뜻<figure id="b0693c6d-bdb0-48cf-9544-0bc76e085f90" class="image"><a href="3%20node%20js%E1%84%85%E1%85%A9%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%86%E1%85%AE%E1%86%AB%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20837f4a04b0164b499fe7488b98a37ef4/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-28_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%2592%25E1%2585%25AE_11.40.31.png"><img style="width:530px" src="3%20node%20js%E1%84%85%E1%85%A9%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%86%E1%85%AE%E1%86%AB%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20837f4a04b0164b499fe7488b98a37ef4/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-28_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%2592%25E1%2585%25AE_11.40.31.png"/></a></figure></li></ol></li></ol><ol type="a" id="661ae806-6441-49af-b477-35584db9d6d5" class="numbered-list" start="4"><li>반면 let, const 함수 표현식 클래스 표현식은 호이스팅 안됨 아래코딩은 에러남<figure id="ff4ef283-065c-4b39-8945-4db0dfb99d1e" class="image"><a href="3%20node%20js%E1%84%85%E1%85%A9%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%86%E1%85%AE%E1%86%AB%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20837f4a04b0164b499fe7488b98a37ef4/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-28_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%2592%25E1%2585%25AE_11.41.31.png"><img style="width:531.9886474609375px" src="3%20node%20js%E1%84%85%E1%85%A9%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%86%E1%85%AE%E1%86%AB%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20837f4a04b0164b499fe7488b98a37ef4/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-28_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%2592%25E1%2585%25AE_11.41.31.png"/></a></figure></li></ol></li></ol><hr id="7529b303-0cc3-48f8-844d-e98cfac4c9f5"/><p id="75029e47-5324-4627-9fd8-e59467180292" class="">
+</p><p id="f6a2a4a1-18b8-4a24-8b3b-5d88825e4283" class="">3.6 익스프레스 프레임워크 사용하기<div class="indented"><p id="b770f753-7f23-4b44-9175-e1ea2ee8a182" class="">웹서버에서 제공하는 기능</p><figure id="4d2e86a7-84c7-4dc1-9032-f3ef863ce759" class="image"><a href="3%20node%20js%E1%84%85%E1%85%A9%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%86%E1%85%AE%E1%86%AB%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20837f4a04b0164b499fe7488b98a37ef4/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-28_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%2592%25E1%2585%25AE_11.42.47.png"><img style="width:533.991455078125px" src="3%20node%20js%E1%84%85%E1%85%A9%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%86%E1%85%AE%E1%86%AB%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20837f4a04b0164b499fe7488b98a37ef4/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-28_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%2592%25E1%2585%25AE_11.42.47.png"/></a></figure><figure id="46cbf821-d6b8-4366-bd34-62e619fa3bb1" class="image"><a href="3%20node%20js%E1%84%85%E1%85%A9%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%86%E1%85%AE%E1%86%AB%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20837f4a04b0164b499fe7488b98a37ef4/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-28_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%2592%25E1%2585%25AE_11.43.14.png"><img style="width:531.9886474609375px" src="3%20node%20js%E1%84%85%E1%85%A9%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%86%E1%85%AE%E1%86%AB%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20837f4a04b0164b499fe7488b98a37ef4/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-28_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%2592%25E1%2585%25AE_11.43.14.png"/></a></figure></div></p><p id="08285a79-a1a3-4b25-a085-7f9f18effb7d" class="">
+</p><p id="0dfcf3a2-084f-44c2-91d2-5b55e51f8a18" class="">3.6.1 익스프레스 설치하기<div class="indented"><ul id="ac0d1207-0352-425c-aeb2-31582c11b57a" class="bulleted-list"><li style="list-style-type:disc">익스프레스는 기본 라이브러리가 아니므로 설치<figure id="3832f485-07f7-4277-a0cd-c632cc660779" class="image"><a href="3%20node%20js%E1%84%85%E1%85%A9%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%86%E1%85%AE%E1%86%AB%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20837f4a04b0164b499fe7488b98a37ef4/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-28_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%2592%25E1%2585%25AE_11.46.19.png"><img style="width:577.9971313476562px" src="3%20node%20js%E1%84%85%E1%85%A9%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%86%E1%85%AE%E1%86%AB%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20837f4a04b0164b499fe7488b98a37ef4/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-28_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%2592%25E1%2585%25AE_11.46.19.png"/></a></figure><figure id="46c9e48d-d436-4544-9113-e51e9907e2bf" class="image"><a href="3%20node%20js%E1%84%85%E1%85%A9%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%86%E1%85%AE%E1%86%AB%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20837f4a04b0164b499fe7488b98a37ef4/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-28_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%2592%25E1%2585%25AE_11.46.27.png"><img style="width:576px" src="3%20node%20js%E1%84%85%E1%85%A9%20%E1%84%87%E1%85%A2%E1%86%A8%E1%84%8B%E1%85%A6%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%86%E1%85%AE%E1%86%AB%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20837f4a04b0164b499fe7488b98a37ef4/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-05-28_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%2592%25E1%2585%25AE_11.46.27.png"/></a></figure><p id="2ea50529-6d26-4cea-bfc4-bbf26307abb1" class="">
+</p></li></ul></div></p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
