@@ -674,48 +674,5 @@ blockquote {
 	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
 }
 	
-</style></head><body><article id="bb479039-2d17-4e28-9525-099cd9d60204" class="page sans"><header><h1 class="page-title">4. node.js와 익스프레스로 웹 애플리케이션 서버 구현하기</h1><p class="page-description"></p></header><div class="page-body"><p id="409d503a-8105-45b1-b0ba-bab79f8f1ab0" class="">
-</p><p id="575baca4-a626-40c4-afef-55978abce98a" class="">3.4 동적으로 응답하기</p><p id="72c250eb-7caf-4910-ab49-9587e713b11c" class="">앞 작성한 서버는 브라우저에 호스트 접속하면 언제나 같은결과를 보여줍니다. user() 함수를 수정해서 매겨변수에 따라 동적으로 응답이 변경되도록 함</p><p id="dfbc599d-2eb2-4193-a08e-36efce000933" class="">user()함수는 응답으로 고정된 name와 age정보를 반환함</p><p id="394e3ca1-6f0c-4714-a8eb-af9fec520a83" class="">url의 query 부분에 name와 age 정보를 추가함</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="bd41c2f3-2e12-405c-bac9-2b269eb34e31" class="code"><code class="language-JavaScript">const http = require(&quot;http&quot;);
-const url = require(&quot;url&quot;);
-http
-  .createServer((req, res) =&gt; {
-    const path = url.parse(req.url, true).pathname;
-    res.setHeader(&quot;Content-Type&quot;, &quot;text/html&quot;);
-    if (path === &quot;/user&quot;) {
-      user(req, res); // 1 
-    } else if (path === &quot;/feed&quot;) {
-      feed(req, res); // 2
-    } else {
-      notFound(req, res); // 3
-    }
-  })
-  .listen(&quot;3000&quot;, () =&gt; console.log(&quot;라우터를 만들어보자!&quot;));
-
-//////////////////////////////////////
-
-const user = (req, res) =&gt; {
-  const userInfo = url.parse(req.url, true).query;
-  // 1 쿼리스트링데이터를 userInfo에 할당
-  res.end(`[user] name : ${userInfo.name}, age: ${userInfo.age}`);
-  // 2 결과값으로 이름과 나이 설정
-};
-
-//////////////////////////////////////
-
-const feed = (req, res) =&gt; {
-  res.end(`&lt;ul&gt;
-        &lt;li&gt;picture1&lt;/li&gt;
-        &lt;li&gt;picture2&lt;/li&gt;
-        &lt;li&gt;picture3&lt;/li&gt;
-      &lt;/ul&gt;
-      `);
-};
-
-const notFound = (req, res) =&gt; {
-  res.statusCode = 404;
-  res.end(&quot;404 page not found&quot;);
-};
-</code></pre><p id="de26ef6d-0ec0-4bbb-b302-5c38ed242343" class="">
-</p><p id="66b274a0-4b33-4323-b79a-5256b0db3871" class=""><a href="http://localhost:3000/user?name=lhg%20&amp;age=20">http://localhost:3000/user?name=lhg &amp;age=20</a></p><p id="6321c532-e63e-43b3-a9aa-29fddaaaa66f" class="">쿼리스트링으로 이용하여 값을 넣음</p><p id="2e7ae80c-9150-4175-ae38-ba3abc73d658" class="">
-</p><hr id="acee6b3e-055a-4b7b-a327-cb9a8f53463e"/><p id="ed93f5db-45d8-4be1-bd8a-893533c1f829" class="">
-</p><p id="9507c6dd-e113-48cf-887f-b837f3b6e81c" class="">3.5 라우터 리팩터링하기</p><p id="ec863a66-a090-4460-b37f-e4d52830a5a3" class="">함수가 user()포함 3개 만약 100넘어가면 유지보수힘듬 분기문에 사용되는 매개변수가 같은 패턴을 보일때 맵자료구조가 유용 맵분기문 사용하면 깔끔</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
+</style></head><body><article id="bb479039-2d17-4e28-9525-099cd9d60204" class="page sans"><header><h1 class="page-title">4. node.js와 익스프레스로 웹 애플리케이션 서버 구현하기</h1><p class="page-description"></p></header><div class="page-body"><p id="409d503a-8105-45b1-b0ba-bab79f8f1ab0" class="">4.1 npm 소개 <div class="indented"><ul id="5a50fcc6-b16f-4987-9478-1de9e983e30a" class="bulleted-list"><li style="list-style-type:disc">유저가 만든 패키지 등록하는 저장소</li></ul><ul id="0e08ae20-a4d3-461f-8746-667364bf9a26" class="bulleted-list"><li style="list-style-type:disc">CLI의미함 노드설치하면 자동임</li></ul><ul id="a0e9ac8a-1d3c-4af5-9690-30f479080f30" class="bulleted-list"><li style="list-style-type:disc">패키지 많음</li></ul><ul id="49f1aa37-cd80-4fa3-9fc2-055049efe13f" class="bulleted-list"><li style="list-style-type:disc">패키지 매니저<ul id="60bc0b80-5dbc-4698-88c8-8ec767114445" class="bulleted-list"><li style="list-style-type:circle">의존성 패키지를 관리하는 프로그램</li></ul><ul id="a58eb4e2-c283-45ed-972d-a9b6056f4473" class="bulleted-list"><li style="list-style-type:circle">의존성 패키지<ul id="9ee51974-50e3-4f4e-aa44-d40f826d608e" class="bulleted-list"><li style="list-style-type:square">프로젝트를 실행하는데 필요한 라이브러리 모듈</li></ul></li></ul></li></ul></div></p><hr id="8d458a97-8fd1-4ed9-9b8e-d71c96cc6c0b"/><p id="57f92311-6149-4e2f-8fa5-42c64e7977d1" class="">4.2 패키지와 모듈<div class="indented"><ul id="858f37ea-8b59-476c-b5d0-fffaf66508c4" class="bulleted-list"><li style="list-style-type:disc">노드에서 패키지는 pakage.json으로 정의한 파일 또는 디렉터리를 의미</li></ul><ul id="3d70c859-bed0-4fa8-98b1-c2880a16e9ca" class="bulleted-list"><li style="list-style-type:disc">패키지에는 pakage.json이 포함됨</li></ul><p id="569f5f30-7e04-4d45-bfdd-81d53a4f1b39" class="">
+</p></div></p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
