@@ -1,0 +1,874 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>5. npm과 yarn으로 패키지 관리하기</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="bd7a0679-ca71-4891-8e92-f23d27ddd37d" class="page sans"><header><h1 class="page-title">5. npm과 yarn으로 패키지 관리하기</h1><p class="page-description"></p></header><div class="page-body"><p id="9e9098a7-c25f-4d36-a321-b73e0fe9738a" class="">5.1 자바스크립트 비동기 소개 <div class="indented"><ul id="d89332bb-17e7-4bb0-9ebd-44eb366e72bb" class="bulleted-list"><li style="list-style-type:disc">동기 프로그래밍에서 작업은  차례대로 실행되며 작업이 완료될때까지 중단 ㄴㄴ</li></ul><ul id="18b20abf-8bd6-4805-9558-e2442e00705c" class="bulleted-list"><li style="list-style-type:disc">비동기 프로그래밍에서는 임의의 순서로 또는 동시에 작업이 실행됨</li></ul><ul id="b21a84aa-2456-4acc-ae7a-626846c53708" class="bulleted-list"><li style="list-style-type:disc">자바스크립트는 싱글스레드 동작하지만 비동기 처리됨<ul id="53e9416c-7584-4e8d-8c25-1393ca1c159f" class="bulleted-list"><li style="list-style-type:circle">콜백 : 함수의 파라미터로 함수를전달하며 비동기 처리가 끝날떄 함수 실행<ul id="3ff2b2d8-57dc-442a-99da-f9bcfa68fb5f" class="bulleted-list"><li style="list-style-type:square">가독성이 좋지 못하고 유지보수 및 디버깅 힘듬</li></ul></li></ul><ul id="afc89a26-4d8f-4877-880a-35484eaf6261" class="bulleted-list"><li style="list-style-type:circle">프로미스 : 콜백대신 사용하는 방법 비동기 작업이 완료되면 결과를 반환하는 객체<ul id="09628933-a877-4cec-8cb9-e37673aaa509" class="bulleted-list"><li style="list-style-type:square">상태를 가지고 있으며 처음에는 대기였다가 작업이 완료되면 성공 또는 실패 상태</li></ul><ul id="3125ad71-8824-4ead-9d41-bda70e605870" class="bulleted-list"><li style="list-style-type:square">then(),catch() 메서드를 사용하며 성공과 실패에 대한 처리함 </li></ul></li></ul><ul id="b410a687-00ad-4e43-94bd-8ac31cd334f8" class="bulleted-list"><li style="list-style-type:circle">어싱크어웨이트 : 프로미스를 사용하는 비동기 작업을 동기적으로 처리하는 것처럼 코드 작성<ul id="5f7541ae-fd4a-4755-8fa9-0aa3094ddfc6" class="bulleted-list"><li style="list-style-type:square">async가 붙어 있는 함수를 실행할 때  awaut키워드를 사용하여 비동기 작업 완료될때가지 대기</li></ul></li></ul></li></ul></div></p><p id="c9178a12-c634-4db4-80f6-bc5f52dcad32" class="">
+</p><hr id="7fd337cf-8b15-4060-ac05-616fa5456752"/><p id="70f2d2fc-67d1-4c2b-be0a-503a22669d3b" class="">
+</p><p id="e3353528-acb6-40ff-98ae-74360b3a1012" class="">5.2 콜백함수 소개<div class="indented"><ul id="2404549e-bbca-4746-83e5-76743c5e707f" class="bulleted-list"><li style="list-style-type:disc">비동기는 현재 코드를 실행 결과를 받지 않고 이후 코드를 수행하는 기법 </li></ul><ul id="71ba94ae-5ed6-45fe-89cf-48e9444fb8be" class="bulleted-list"><li style="list-style-type:disc">콜백<ul id="2b7ea7e9-24b5-4730-a1f5-e484d9f2630b" class="bulleted-list"><li style="list-style-type:circle">실행가능한 함수를 인자로 전달하여 특정상황에 발생할 때 호출되게 하는 방식</li></ul></li></ul><ul id="15e06658-a48d-4939-90ff-ccea5ec1429b" class="bulleted-list"><li style="list-style-type:disc">콜백함수 작성해보기<ul id="114910f2-e03c-42db-91e4-2e004f948afd" class="bulleted-list"><li style="list-style-type:circle">회원가입이 3단계로 이어지면 회원 가입 API를 호출</li></ul><ol type="1" id="c625b3d8-8c94-4bad-ac4c-21368b84f530" class="numbered-list" start="1"><li>데이터베이스에 저장</li></ol><ol type="1" id="526d4212-b465-45e4-b520-8b49a5fd716e" class="numbered-list" start="2"><li>이메일 보냄</li></ol><ol type="1" id="7ae7157d-ddd8-4957-ad2c-0f1bfa728e90" class="numbered-list" start="3"><li>성공메세지 보여줌</li></ol><ul id="82b7a96c-da9f-467c-8884-d5f11990cd9a" class="bulleted-list"><li style="list-style-type:circle">이방식을 콜백으로 작성</li></ul></li></ul><ol type="1" id="6d7c795e-770c-443b-8ea0-f1e128abe637" class="numbered-list" start="1"><li>5장에서 디렉터리 먼저생성 </li></ol><ol type="1" id="b8c57e6b-0343-452f-aab7-495757bedc80" class="numbered-list" start="2"><li>코드작성 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="92af393d-c75c-4fcd-ac12-7fb478092f24" class="code"><code class="language-JavaScript">const DB = [];
+
+// 회원가입 API 함수
+function register(user) { //1. 콜백이 3중으로 중첩 된 함수
+  return saveDB(user, function (user) {   // 콜백
+    return sendEmail(user, function (user) {   // 콜백
+      return getResult(user);   // 콜백
+    });
+  });
+}
+
+// 2 DB에 저장후 콜백 실행
+function saveDB(user, callback) {
+  DB.push(user);
+  console.log(`save ${user.name} to DB`);
+  return callback(user);
+}
+
+// 3 이메일 발송 로그만 남기는 코드 실행 후 콜백 실행
+function sendEmail(user, callback) {
+  console.log(`email to ${user.email}`);
+  return callback(user);
+}
+
+// 4. 결과를 반환하는 함수
+function getResult(user) {
+  return `success register ${user.name}`;
+}
+
+const result = register({ email: &quot;andy@test.com&quot;, password: &quot;1234&quot;, name: &quot;andy&quot; });
+console.log(result);
+</code></pre><ul id="ac81cfe4-9ba2-45d0-930b-8eece62b7e69" class="bulleted-list"><li style="list-style-type:disc">3단계로 회원 가입  API를 실행<ol type="1" id="1a2b6ae1-c7c9-4125-bd62-5de423b9ee51" class="numbered-list" start="1"><li>register() 함수는 </li></ol><ol type="1" id="81a5c4af-0533-4c12-8416-fc075b9c765d" class="numbered-list" start="2"><li>saveDB()</li></ol><ol type="1" id="8584b034-d69a-4eeb-9dc6-52ec9438b8ef" class="numbered-list" start="3"><li>sendEmail()</li></ol><ol type="1" id="607042e3-80dc-40f2-8d5a-acd84cdd6824" class="numbered-list" start="4"><li>getResult()함수를 각각 차례대로 호출해 콜백을 사용</li></ol><ul id="eef2c4f0-72e6-4479-96c3-d083764f317f" class="bulleted-list"><li style="list-style-type:circle">여기서 보장하는 것은 함수의 실행순서</li></ul><ol type="1" id="bd05a931-eb39-442d-b331-38be8dc6460c" class="numbered-list" start="3"><li>번에서 이메일 발송후에 기다리지 않고 바로 콜백 실행</li></ol></li></ul><ol type="1" id="af90c15b-d688-43f4-8abc-a0ba4620e1cb" class="numbered-list" start="3"><li>작성한 코드 실행<figure id="856cc190-798f-4415-96d1-09dd82a6565c" class="image"><a href="5%20npm%E1%84%80%E1%85%AA%20yarn%E1%84%8B%E1%85%B3%E1%84%85%E1%85%A9%20%E1%84%91%E1%85%A2%E1%84%8F%E1%85%B5%E1%84%8C%E1%85%B5%20%E1%84%80%E1%85%AA%E1%86%AB%E1%84%85%E1%85%B5%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20bd7a0679ca7148918e92f23d27ddd37d/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-06-03_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_5.42.05.png"><img style="width:522px" src="5%20npm%E1%84%80%E1%85%AA%20yarn%E1%84%8B%E1%85%B3%E1%84%85%E1%85%A9%20%E1%84%91%E1%85%A2%E1%84%8F%E1%85%B5%E1%84%8C%E1%85%B5%20%E1%84%80%E1%85%AA%E1%86%AB%E1%84%85%E1%85%B5%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20bd7a0679ca7148918e92f23d27ddd37d/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-06-03_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_5.42.05.png"/></a></figure><ul id="5e2782ef-9fc0-41dc-aed6-35e485c543bc" class="bulleted-list"><li style="list-style-type:disc">코드가 3단계가 아닌 10 단계 20던계 있을수 있음 </li></ul><ul id="cdc0b87c-9e02-4da6-9113-4ba61a1219f5" class="bulleted-list"><li style="list-style-type:disc">그러면 점점 알아보기 힘든상황생김</li></ul><ul id="80b40e8a-d8e1-4dd0-9380-0d2ae5ba8420" class="bulleted-list"><li style="list-style-type:disc">프로미스는 이러한 콜백 문제를 해결할 목적으로 도입</li></ul></li></ol><hr id="697480ce-8f20-48be-b744-f3a79d5c4ca6"/><p id="28c92d02-0b27-4f92-8bf6-77d70dd2192c" class="">
+</p><p id="6ad39456-3bd4-4867-a36f-77be94a5180a" class="">5.3 Promise 객체<div class="indented"><ul id="90e1a01d-5939-45ad-9bd2-821f05da60e0" class="bulleted-list"><li style="list-style-type:disc">프로미스는 자바스크립트에서 비동기 실행을 동기화 하는 구문으로 사용</li></ul><ul id="a86c651d-c4f2-4d7d-b13c-09bde281350e" class="bulleted-list"><li style="list-style-type:disc">프룀스는 이행, 불이행, 대기 3가지 상태로 가질수 있음</li></ul><ul id="7f719276-84eb-4e76-b860-b8b7094973b7" class="bulleted-list"><li style="list-style-type:disc">프로미스는 개체이므로 new 연산자로 인스턴스를 생성할 수 있음<figure id="8f1bf2c5-5c2d-4a91-9af3-0d0d8762a3a5" class="image"><a href="5%20npm%E1%84%80%E1%85%AA%20yarn%E1%84%8B%E1%85%B3%E1%84%85%E1%85%A9%20%E1%84%91%E1%85%A2%E1%84%8F%E1%85%B5%E1%84%8C%E1%85%B5%20%E1%84%80%E1%85%AA%E1%86%AB%E1%84%85%E1%85%B5%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20bd7a0679ca7148918e92f23d27ddd37d/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-06-03_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_5.44.53.png"><img style="width:403.991455078125px" src="5%20npm%E1%84%80%E1%85%AA%20yarn%E1%84%8B%E1%85%B3%E1%84%85%E1%85%A9%20%E1%84%91%E1%85%A2%E1%84%8F%E1%85%B5%E1%84%8C%E1%85%B5%20%E1%84%80%E1%85%AA%E1%86%AB%E1%84%85%E1%85%B5%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20bd7a0679ca7148918e92f23d27ddd37d/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-06-03_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_5.44.53.png"/></a></figure></li></ul><ul id="21c88d58-18a7-4d27-ad41-17932d5df046" class="bulleted-list"><li style="list-style-type:disc">프로미스는 객체가 생성되면 대기상태</li></ul><ul id="73ae97b8-d71d-4ea1-a907-7238ffc4872d" class="bulleted-list"><li style="list-style-type:disc">resolve()함수가 실행되면 이행으로 변경되고</li></ul><ul id="2399197c-f188-4be4-97b0-cee7af38044a" class="bulleted-list"><li style="list-style-type:disc">실패해 reject함수가 실행되면 거절로 변경</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="05f5b802-5234-4867-8a8d-00fea1bcf7b6" class="code"><code class="language-JavaScript">const DB = [];
+
+function saveDB(user) {
+  // 실패 테스트시 다음의 주석 해제 
+  const oldDBSize = DB.length + 1;
+  // const oldDBSize = DB.length;
+
+  DB.push(user);
+  console.log(`save ${user.name} to DB`);
+  return new Promise((resolve, reject) =&gt; {  // 콜백 대신 Promise 객체 변환
+    if (DB.length &gt; oldDBSize) {
+      resolve(user);  //성공 시 유저 정보 반환
+    } else {
+      reject(new Error(&quot;Save DB Error!&quot;));  //1.실패 시 에러 발생
+    }
+  });
+}
+
+function sendEmail(user) {
+  console.log(`email to ${user.email}`);
+  return new Promise((resolve) =&gt; { //Promise 객체를 반환, 실패 처리 없음
+    resolve(user);
+  });
+}
+
+function getResult(user) {
+  return new Promise((resolve, reject) =&gt; {  //Promise 객체를 반환
+    resolve(`success register ${user.name}`); // 성공 시 성공 메세지와 유저명 반환
+  });
+}
+
+function registerByPromise(user) {
+  const result = saveDB(user)
+                  .then(sendEmail)
+                  .then(getResult)
+                  .catch(error =&gt; new Error(error))
+                  .finally(() =&gt; console.log(&quot;완료!&quot;));
+  // 아직 완료되지 않았으므로 pending 상태로 나옴
+  console.log(result);
+  return result;
+}
+
+const myUser = { email: &quot;andy@test.com&quot;, password: &quot;1234&quot;, name: &quot;andy&quot; };
+
+const result = registerByPromise(myUser);
+result.then(console.log);
+
+// allResult = Promise.all([saveDB(myUser), sendEmail(myUser), getResult(myUser)]);
+// allResult.then(console.log);
+</code></pre></div></p></li></ol></div></p><p id="f7b76eea-15ab-4cd6-a57f-07665483b67e" class="">
+</p><p id="22cc60be-3e87-4e21-a1d1-bc5863b2b6af" class="">saveDB(), sendEmil(), getResult() 함수들에 대한 콜백함수가 promise객체로 바뀜</p><p id="c81caf4e-61fd-487c-aefb-e6f4ba031bbe" class="">Promise갹체이므로 new 생성할 수 있고 그 안에 resolve(), reject() 함수가 있으며<div class="indented"><ul id="e526fa0e-1eb7-43c3-9a3e-4b2d0c790558" class="bulleted-list"><li style="list-style-type:disc">성공하면 resolve()</li></ul><ul id="11e32ee0-b3c6-4010-9ed3-7e13579a9956" class="bulleted-list"><li style="list-style-type:disc">실패하면 reject()</li></ul></div></p><p id="081ced9d-a9b4-4c7a-9fee-c1677d2f8f65" class="">또한 Promise에는 then(Promise)메서드가 있어서 비동기 호출이지만<div class="indented"><ul id="bc9cdd1f-ac6b-461a-9c49-169884fc70b6" class="bulleted-list"><li style="list-style-type:disc">primise1.then(promise2),then(promise3)이런식으로 순서대로 함수를 호출할 수 있음</li></ul><ul id="5632e9f1-bddc-4dbd-9217-1a1df446b40e" class="bulleted-list"><li style="list-style-type:disc">예를들어 registerByPromise()함수 내부에는 saveDB()함수에 user를 넣는데 그 결과가 Promise임</li></ul><ul id="0e9ca857-42cc-4012-bfdc-be0034ef195c" class="bulleted-list"><li style="list-style-type:disc">프로마이즈니까 then을 쓸 수 있음</li></ul></div></p><p id="bf272833-97a9-44ad-a7e7-41b7512fff4e" class="">then()함수의 사용법은 다음과 같음 <div class="indented"><ul id="ac09e118-02f4-4320-9c93-8e2fd9507ff5" class="bulleted-list"><li style="list-style-type:disc">매개변수로 함수를 이행 또는 거절 시에 실행 할 함수를 넣어주면됨</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="d3a0f560-0fd1-4ecd-be9d-08f857cb7003" class="code"><code class="language-JavaScript">then(onFulfiUed)
+then(onFulfiUedj onRejected)
+then(
+(value) =&gt; { /* fulfillment handler */ },
+(reason) =&gt; { /* rejection handler */ },
+)</code></pre></div></p><p id="d924a9f1-b82d-4cf2-9733-5f6803fdbb1b" class="">
+</p><ol type="1" id="83635b48-1905-421c-991b-9db8a1657d67" class="numbered-list" start="1"><li> 프로마이즈 객체의 실행 결과로 실패로 주어야 하는 경우 reject()함수를 사용 본문 코드에서는에러발생</li></ol><ol type="1" id="1cd36e97-898e-4537-b4ac-a58a01cbbb77" class="numbered-list" start="2"><li>save()함수가 promise를 반환하고, sendEmail도 Promise를 반환하므로 다음과 같이 save(user)함수 이후에 then(sendEmail) 처럼 연속 호출할 함수를 지정해줄 수 있음<ol type="a" id="8abf33b6-bb44-47bc-9a16-31a67487beb6" class="numbered-list" start="1"><li>그러면 saveDB() → sendEmail()순서대로 실행됨. </li></ol><ol type="a" id="c8b4ff63-1c90-402b-945a-7e3779a69425" class="numbered-list" start="2"><li>또한 sendEmail의 결과값도 Promise이므로 saveDB().then(sendEmail).then(getResult) 이런식으로 연결가능 </li></ol><ol type="a" id="27b0c500-0e4a-45fc-a93e-94efba6e44b2" class="numbered-list" start="3"><li>프로마이즈에서 발생하는 에러에는 .catch()를 사용함</li></ol><ol type="a" id="5aba6b28-dca2-44a2-9d99-8fd4107b9bc6" class="numbered-list" start="4"><li>saveDB(user).then(sendEmail).then(getResult).catch(errer ⇒ new Error(error))와 같이 연결하여 사용가능</li></ol></li></ol><ol type="1" id="8a1c3aba-2890-475b-8df7-6f3d00b790a7" class="numbered-list" start="3"><li>console.log(result)의 실행결과로 ‘promise {&lt;pending&gt;}’이 출력되었음<ul id="5ba886d9-3a77-46e2-b34d-50d78dbf5a84" class="bulleted-list"><li style="list-style-type:disc">result = saveDB(user).then(sendEmail).then(getResult); 실행이 완료되지 않았는데 result를 마지막으로 출력해서그럼</li></ul><ul id="3b03c282-679c-4e65-a230-4759e5ef7ac0" class="bulleted-list"><li style="list-style-type:disc">그래서 Promise가 실행중</li></ul><ul id="1aa3b538-2c4c-4c74-b671-60b90f3aef61" class="bulleted-list"><li style="list-style-type:disc">마지막으로 registerByPromise()의 결과는 어떤 타입?</li></ul><ul id="90bfe761-19a0-4637-91c6-204dd45f844a" class="bulleted-list"><li style="list-style-type:disc">promise타입이므로  콘솔 출력하면 다시 프로마이스 펜딩 메세지 볼수있음</li></ul><ul id="67138a6c-a375-4552-aba9-8bf4e461a73f" class="bulleted-list"><li style="list-style-type:disc"></li></ul></li></ol><hr id="3023eca2-90bf-4397-be60-22387d288209"/><p id="ed600bec-d066-4a9c-9d12-8786e0db6c64" class="">
+</p><p id="d1ac21de-d368-426a-8669-bab76b80c6bf" class="">5.3.1 동시에 여러 promise 객체 호출하기<div class="indented"><ul id="e0425a48-3068-49ea-9041-349749cc80d6" class="bulleted-list"><li style="list-style-type:disc">Promise.all([Promise1,Promise2,Promise3…])쓰면됨</li></ul><ul id="e2ea9bcb-de40-406e-85a8-0a69f055eec8" class="bulleted-list"><li style="list-style-type:disc">나열된 순서와 상관없이 다음과 같이 실행됨</li></ul><ol type="1" id="e77142d9-6196-43ee-b661-cca630411a61" class="numbered-list" start="1"><li>코드 수정 및 추가<figure id="6e0e47e6-abb5-4bd6-af2f-305414d1ff70" class="image"><a href="5%20npm%E1%84%80%E1%85%AA%20yarn%E1%84%8B%E1%85%B3%E1%84%85%E1%85%A9%20%E1%84%91%E1%85%A2%E1%84%8F%E1%85%B5%E1%84%8C%E1%85%B5%20%E1%84%80%E1%85%AA%E1%86%AB%E1%84%85%E1%85%B5%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20bd7a0679ca7148918e92f23d27ddd37d/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-06-04_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_4.57.02.png"><img style="width:525px" src="5%20npm%E1%84%80%E1%85%AA%20yarn%E1%84%8B%E1%85%B3%E1%84%85%E1%85%A9%20%E1%84%91%E1%85%A2%E1%84%8F%E1%85%B5%E1%84%8C%E1%85%B5%20%E1%84%80%E1%85%AA%E1%86%AB%E1%84%85%E1%85%B5%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20bd7a0679ca7148918e92f23d27ddd37d/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-06-04_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_4.57.02.png"/></a></figure></li></ol><ol type="1" id="257b7415-9827-443c-b238-9dd1a49619c6" class="numbered-list" start="2"><li>수정한코드 실행<figure id="321c586a-3a8b-40d7-88d6-02b046cfea20" class="image"><a href="5%20npm%E1%84%80%E1%85%AA%20yarn%E1%84%8B%E1%85%B3%E1%84%85%E1%85%A9%20%E1%84%91%E1%85%A2%E1%84%8F%E1%85%B5%E1%84%8C%E1%85%B5%20%E1%84%80%E1%85%AA%E1%86%AB%E1%84%85%E1%85%B5%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20bd7a0679ca7148918e92f23d27ddd37d/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-06-04_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_4.57.12.png"><img style="width:525.9943237304688px" src="5%20npm%E1%84%80%E1%85%AA%20yarn%E1%84%8B%E1%85%B3%E1%84%85%E1%85%A9%20%E1%84%91%E1%85%A2%E1%84%8F%E1%85%B5%E1%84%8C%E1%85%B5%20%E1%84%80%E1%85%AA%E1%86%AB%E1%84%85%E1%85%B5%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20bd7a0679ca7148918e92f23d27ddd37d/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-06-04_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_4.57.12.png"/></a></figure></li></ol><p id="3d3e78ce-f584-4e25-aaac-f6d3583b3133" class="">allResult.then(console.log)으로 promise의 결과값을 얻음. 변수명이 이미 allResult 인데</p><p id="1a762748-5930-4490-942a-2011eb550203" class="">다시 then을 사용하여 결과값 어색함<div class="indented"><ul id="23ec3a04-2f4c-4307-9859-5d269a00fb35" class="bulleted-list"><li style="list-style-type:disc">asyneawait사용</li></ul></div></p></div></p><p id="0fd4b9f9-af8f-4fc6-8e76-baaf773884c4" class="">
+</p><hr id="9a47b02b-c315-43a5-b688-501b15b6069e"/><p id="feba16ed-6fff-476a-a2f2-24f79fd548b1" class="">
+</p><p id="bdede1e1-5422-4834-9d4b-6c9b43510adf" class="">5.3.2 Promise 예외처리하기<div class="indented"><ol type="1" id="f4a8f7e7-7220-496d-90de-2b39e9fa2ce1" class="numbered-list" start="1"><li>saveDB()함수의 로직을 약간 변경하고 테스트를 해봄<figure id="59ca1553-2018-444e-b11d-8f0bca6abd7b" class="image"><a href="5%20npm%E1%84%80%E1%85%AA%20yarn%E1%84%8B%E1%85%B3%E1%84%85%E1%85%A9%20%E1%84%91%E1%85%A2%E1%84%8F%E1%85%B5%E1%84%8C%E1%85%B5%20%E1%84%80%E1%85%AA%E1%86%AB%E1%84%85%E1%85%B5%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20bd7a0679ca7148918e92f23d27ddd37d/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-06-04_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_5.02.24.png"><img style="width:525.9943237304688px" src="5%20npm%E1%84%80%E1%85%AA%20yarn%E1%84%8B%E1%85%B3%E1%84%85%E1%85%A9%20%E1%84%91%E1%85%A2%E1%84%8F%E1%85%B5%E1%84%8C%E1%85%B5%20%E1%84%80%E1%85%AA%E1%86%AB%E1%84%85%E1%85%B5%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20bd7a0679ca7148918e92f23d27ddd37d/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-06-04_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_5.02.24.png"/></a></figure></li></ol><ul id="bb2b4c89-5a69-4d3f-be5b-309942fe9bc9" class="bulleted-list"><li style="list-style-type:disc">promise-test.js 파일을 구현하면 <ul id="ae448338-fee3-4c26-a6a0-df39e89300ed" class="bulleted-list"><li style="list-style-type:circle">saveDB()함수의 Promise의 이행조건으로 DB.legth가 oldDBSize보다 커야함</li></ul><ul id="636acb91-4b05-4414-8ed8-bd83b9df7c66" class="bulleted-list"><li style="list-style-type:circle">그러므로 일부러 oldDBSize를 더 크게해주면 Promise 로직이 실패함</li></ul></li></ul><ol type="1" id="886656be-638e-46ab-89f2-d9575ebdecdd" class="numbered-list" start="2"><li>registerByPromise()함수에 catch 부분을 추가해줍시다.<figure id="4d401a32-1f0f-492d-ad37-ed96108dc73a" class="image"><a href="5%20npm%E1%84%80%E1%85%AA%20yarn%E1%84%8B%E1%85%B3%E1%84%85%E1%85%A9%20%E1%84%91%E1%85%A2%E1%84%8F%E1%85%B5%E1%84%8C%E1%85%B5%20%E1%84%80%E1%85%AA%E1%86%AB%E1%84%85%E1%85%B5%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20bd7a0679ca7148918e92f23d27ddd37d/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-06-04_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_5.09.25.png"><img style="width:517px" src="5%20npm%E1%84%80%E1%85%AA%20yarn%E1%84%8B%E1%85%B3%E1%84%85%E1%85%A9%20%E1%84%91%E1%85%A2%E1%84%8F%E1%85%B5%E1%84%8C%E1%85%B5%20%E1%84%80%E1%85%AA%E1%86%AB%E1%84%85%E1%85%B5%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20bd7a0679ca7148918e92f23d27ddd37d/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-06-04_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_5.09.25.png"/></a></figure></li></ol><ol type="1" id="fc8e9469-0ff9-4f00-8346-00f1474183c9" class="numbered-list" start="3"><li>실행하면 이런 에러가 나옴#<figure id="728b4df6-b2cc-421f-ac32-4638bb9e9228" class="image"><a href="5%20npm%E1%84%80%E1%85%AA%20yarn%E1%84%8B%E1%85%B3%E1%84%85%E1%85%A9%20%E1%84%91%E1%85%A2%E1%84%8F%E1%85%B5%E1%84%8C%E1%85%B5%20%E1%84%80%E1%85%AA%E1%86%AB%E1%84%85%E1%85%B5%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20bd7a0679ca7148918e92f23d27ddd37d/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-06-04_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_5.10.03.png"><img style="width:516px" src="5%20npm%E1%84%80%E1%85%AA%20yarn%E1%84%8B%E1%85%B3%E1%84%85%E1%85%A9%20%E1%84%91%E1%85%A2%E1%84%8F%E1%85%B5%E1%84%8C%E1%85%B5%20%E1%84%80%E1%85%AA%E1%86%AB%E1%84%85%E1%85%B5%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20bd7a0679ca7148918e92f23d27ddd37d/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-06-04_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_5.10.03.png"/></a></figure></li></ol><ul id="a66f89f0-7fbe-429f-b1f2-f1e00240c2ec" class="bulleted-list"><li style="list-style-type:disc">oldDBSize를 DB.length + 1 로 변경했거나 매우 큰 숫자로 변경하면 registerByPromise()에서 에러가 남<ul id="a4999456-bca3-4012-87ec-47664659fc34" class="bulleted-list"><li style="list-style-type:circle">이유는 DB.length값이 oldDBSize보다 커야한 resolve()가 실행되면서 성공하는데</li></ul><ul id="c57a4278-aa66-44f5-8800-9d7ab6e62f73" class="bulleted-list"><li style="list-style-type:circle">DB.length 값이 oldDBSIze보다 작다면 reject()가 실행면서 실패하게 반환하는 함수 작성 </li></ul><ul id="c6f609ea-09e8-48a4-a240-19091bb09b6e" class="bulleted-list"><li style="list-style-type:circle">실패유도</li></ul></li></ul><ol type="1" id="38a8ceb1-3e94-4d2c-b98e-f21005c99515" class="numbered-list" start="4"><li>마지막으로 finally()메서드 알아보자 finally()는 비동기 처리 성공 실패 여부와 관계없이 실행할 수 있는 메서드<figure id="dd3db583-a01a-4715-8d65-336d667659e0" class="image"><a href="5%20npm%E1%84%80%E1%85%AA%20yarn%E1%84%8B%E1%85%B3%E1%84%85%E1%85%A9%20%E1%84%91%E1%85%A2%E1%84%8F%E1%85%B5%E1%84%8C%E1%85%B5%20%E1%84%80%E1%85%AA%E1%86%AB%E1%84%85%E1%85%B5%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20bd7a0679ca7148918e92f23d27ddd37d/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-06-04_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_5.19.41.png"><img style="width:518.9630737304688px" src="5%20npm%E1%84%80%E1%85%AA%20yarn%E1%84%8B%E1%85%B3%E1%84%85%E1%85%A9%20%E1%84%91%E1%85%A2%E1%84%8F%E1%85%B5%E1%84%8C%E1%85%B5%20%E1%84%80%E1%85%AA%E1%86%AB%E1%84%85%E1%85%B5%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20bd7a0679ca7148918e92f23d27ddd37d/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-06-04_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_5.19.41.png"/></a></figure><ul id="83611a41-f997-4209-a367-0aa655e9bc9c" class="bulleted-list"><li style="list-style-type:disc">그냥 캐치 파이널 자바 예외처리 느낌</li></ul><p id="36fcd436-03d1-4f9b-93f3-5726de7b02d3" class="">
+</p></li></ol></div></p><hr id="e4927ef3-7caf-47d9-b4e0-179c9753502f"/><p id="19f3d112-d552-4f6e-ac35-8ce83027b78b" class="">5.3.3 프로미스의 문제점<div class="indented"><ul id="a116293b-935f-4e97-a472-bcd03de2f856" class="bulleted-list"><li style="list-style-type:disc">자바스크립트에서 비동기 처리하는데 사용하는 promise 객체는 콜백보다 확실히 편리함</li></ul><ul id="810f457e-2635-45ea-ae09-8c610435ae01" class="bulleted-list"><li style="list-style-type:disc">다만 then()과 catch()함수를 연결하는 체이닝 방식을 사용하기가 쉽지않음</li></ul><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="d4758635-e9df-479a-a86e-220c075b22b1"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">체이닝 : a(),b(),c()와 같이 함수를 연결해서 계속 호출하는 방식을 말함</div></figure><ul id="19f9091a-a622-480f-b7f2-3f17f7395b49" class="bulleted-list"><li style="list-style-type:disc">이상적인 promise 코드<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="27b73b05-839b-4f1c-86ae-e4bb1015e1a1" class="code"><code class="language-JavaScript">function goodPromise(val) {
+ // 1 Promise를 생성 후 반환
+  return new Promise((resolve, reject) =&gt; {
+    resolve(val);
+  });
+}
+
+goodPromise(&quot;세상에&quot;)
+	//2. Promise에서 resolve 이후에는 then 호출가능 
+  .then((val) =&gt; {
+    return val + &quot; 이런&quot;;
+  })
+  .then((val) =&gt; {
+    return val + &quot; 코드는&quot;;
+  })
+  .then((val) =&gt; {
+    return val + &quot; 없습니다. &quot;;
+  })
+  .then((val) =&gt; {
+    console.log(val);
+  })
+  .catch((err) =&gt; { //3.promise에서 reject가 호출되었을 경우 실행
+    console.log(err);
+  });
+</code></pre><ol type="1" id="cd42ee68-6fc2-405d-ad1c-e3f3258c5fcc" class="numbered-list" start="1"><li>goodPromise()함수를 실행하면 Promise 객체를 생성후 반환함</li></ol><ol type="1" id="a253ddd1-a97f-47bc-a962-e790ca56c4d9" class="numbered-list" start="2"><li>goodPromise(”세상에”)를 실행하면 resolve에 “세상에”가 들어가고 결과값으로 Promise를 반환해줌<ol type="a" id="494857ec-52f5-4a80-8bc4-00f900e7a9fa" class="numbered-list" start="1"><li>그래서 then()함수를 다시 쓸 수 있음 이런식으로 연결해 then사용</li></ol></li></ol><ol type="1" id="3135235b-21cc-4a25-bf1b-dc801a3e5ae1" class="numbered-list" start="3"><li>then()으로 처리중 예외가 발생한가면 console.log로 err를 찍고 종료</li></ol></li></ul></div></p><p id="184409b8-288c-40bb-90b6-0b4cc70b8c5c" class=""><div class="indented"><ul id="df7e6d6a-e2a6-4dc1-acd8-443bc46dea40" class="bulleted-list"><li style="list-style-type:disc">복잡한 프로미스 예제<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="a447506e-06b0-4b7d-ae28-98cfdd2e6642" class="code"><code class="language-JavaScript">const axios = require(&quot;axios&quot;); //axios
+//1 영화 순위 정보 URL
+const url = &quot;https://raw.githubusercontent.com/wapj/musthavenodejs/main/movieinfo.json&quot;;
+
+axios
+  .get(url)   //2 GET 요청
+  .then((result) =&gt; {   // 결과값 처리
+    if (result.status != 200) {   //상태가 200 이 아니면 에러
+      throw new Error(&quot;요청에 실패했습니다!&quot;);
+    }
+
+    if (result.data) {  //3 result.data가 있으면 결과를 반환
+      return result.data;
+    }
+
+    throw new Error(&quot;데이터 없습니다.&quot;);  //data가 없으면 에러
+  })
+  .then((data) =&gt; { //4에서는 3에서 받은 데이터 처리
+    if (!data.articleList || data.articleList.size == 0) { //5 크기가 0이면 에러
+      throw new Error(&quot;데이터가 없습니다.&quot;);
+    }
+    return data.articleList;   //6영화 리스트 반환
+  })
+  .then((articles) =&gt; {
+    return articles.map((article, idx) =&gt; {  //7 영화 리스트를 제목과 순위 정보로 분리
+      return { title: article.title, rank: idx + 1 };
+    });
+  })
+  .then((results) =&gt; {
+    for (let movieInfo of results) {
+      console.log(`[${movieInfo.rank}위] ${movieInfo.title}`);
+    }
+  })
+  .catch((err) =&gt; {
+    console.log(&quot;&lt;&lt;에러발생&gt;&gt;&quot;);
+    console.log(err);
+  });
+</code></pre><ol type="1" id="7413b603-1dda-4a81-8d68-40ac067852d9" class="numbered-list" start="1"><li>영화 순위 정보 URL</li></ol><ol type="1" id="e8e6dbd8-0954-431c-bc34-a4091e81303a" class="numbered-list" start="2"><li>1에 있는 정보로 GET요청보냄</li></ol><ol type="1" id="889c9459-f778-43de-8847-74f3dff9e108" class="numbered-list" start="3"><li>결과가 있으면 반환</li></ol><ol type="1" id="32fcc77d-382e-49f6-ae43-023b3f942cef" class="numbered-list" start="4"><li>3에서 받은 데이터를 처리 <ol type="a" id="37484f45-2c1e-40fc-9651-18a5f542f525" class="numbered-list" start="1"><li>데이터에는 articleList가 있고 영화가 순위대로 리스트안에 들어있음</li></ol></li></ol><ol type="1" id="386a0bff-e364-4d1c-801e-fb443bb5a43c" class="numbered-list" start="5"><li>받은 데이터 크기가 0이면 보여줄 데이터가 없는것이라 에러</li></ol><ol type="1" id="e2783605-2c69-4ef8-96e4-e0922ac72b93" class="numbered-list" start="6"><li>영화 리스트 반환함<ol type="a" id="61d3ba5b-fab8-423c-a928-12b4058f6c42" class="numbered-list" start="1"><li>반환한데이터는 다음 then()함수에 처리함</li></ol></li></ol><ol type="1" id="d691378c-7782-4416-80a4-e2cbab80fc1f" class="numbered-list" start="7"><li>HTTP요청으로 받은 데이터를 보기 편하게 가공해야함<ol type="a" id="324dd12d-2996-4660-ac6e-31ea29ef5be9" class="numbered-list" start="1"><li>제목과 순위정보만 분리해서 다시 리스트로 저장</li></ol></li></ol><ol type="1" id="85698bb6-9652-4be3-964e-b72b038f328c" class="numbered-list" start="8"><li>중간 과정에서 에러가 발생하면 여기서 처리<figure id="91373fdb-457b-445b-a3ac-0aad3bb905db" class="image"><a href="5%20npm%E1%84%80%E1%85%AA%20yarn%E1%84%8B%E1%85%B3%E1%84%85%E1%85%A9%20%E1%84%91%E1%85%A2%E1%84%8F%E1%85%B5%E1%84%8C%E1%85%B5%20%E1%84%80%E1%85%AA%E1%86%AB%E1%84%85%E1%85%B5%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20bd7a0679ca7148918e92f23d27ddd37d/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-06-04_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_5.48.18.png"><img style="width:520.9943237304688px" src="5%20npm%E1%84%80%E1%85%AA%20yarn%E1%84%8B%E1%85%B3%E1%84%85%E1%85%A9%20%E1%84%91%E1%85%A2%E1%84%8F%E1%85%B5%E1%84%8C%E1%85%B5%20%E1%84%80%E1%85%AA%E1%86%AB%E1%84%85%E1%85%B5%E1%84%92%E1%85%A1%E1%84%80%E1%85%B5%20bd7a0679ca7148918e92f23d27ddd37d/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2024-06-04_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_5.48.18.png"/></a></figure></li></ol><p id="1d3c5453-c2e8-47a1-97f2-3a065396a1e2" class="">
+</p></li></ul><ul id="11caf80d-cddc-4a0a-a65c-9fb00e3250ca" class="bulleted-list"><li style="list-style-type:disc">문제점 대안 찾기<ul id="1acadc2b-44f4-44ea-8c90-cb5ef2b3d044" class="bulleted-list"><li style="list-style-type:circle">프로미스가 콜백보다는 깔끔한 코드를 유지할 수 있지만 잘못 사용될수 있는 여지가 있음</li></ul><ol type="1" id="91b48591-d373-4169-97ac-662db0a1ff67" class="numbered-list" start="1"><li>프로미스의 then()함수에 성공 시와 실패 시 처리할 함수를 둘 다 넘기는 경우들 수 있음<ol type="a" id="3deb3721-ee3a-480a-9e68-fb9ef83cec61" class="numbered-list" start="1"><li>이렇게 둘다 넘기면 프로미스는 기존 콜백과 다를바 없음</li></ol><ol type="a" id="c3449e58-c647-49dc-88b4-21fe050f985e" class="numbered-list" start="2"><li>좋은방법은 catch()함수로 예외처리</li></ol><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="a6102ddd-33a4-480b-a6a6-df77e0a13c2f" class="code"><code class="language-JavaScript">function myWork(work) {
+    return new Promise((resolve, reject) =&gt; {
+        if (work === &#x27;done&#x27;) {
+            resolve(&#x27;게임 가능&#x27;);
+        } else {
+            reject(new Error(&quot;게임 불가능&quot;));
+        }
+    })
+}
+//1 콜백과 다를 바가 없음
+myWork(&#x27;done&#x27;).then(function (value) { console.log(value) }, function (err) { console.error(err) });
+
+//2 좋음
+myWork(&#x27;doing&#x27;)
+    .then(function (value) { console.log(value) })
+    .catch(function (err) { console.error(err) });</code></pre><ol type="1" id="7933ee72-85d8-4b90-867f-171cc30238f1" class="numbered-list" start="1"><li>코드는 프로미스를 사용하긴 했지만 콜백 방식에서 사용하던 습관이 그대로 들어있음<ol type="a" id="77574932-1f7b-4084-bc08-72e22f5f4a2a" class="numbered-list" start="1"><li>then()을 사용하면 에러가 나는 경우 확이해야할곳이 많음 </li></ol></li></ol><ol type="1" id="2e635f80-269d-4328-948d-d3f2763b5cff" class="numbered-list" start="2"><li>에서는 catch()구문에 에러를 처리함<ol type="a" id="c427aa34-1efa-48e4-a97d-91dbf87c0b9b" class="numbered-list" start="1"><li>then()은 프로미스가 이행되는 경우에만 처리</li></ol></li></ol></li></ol><ol type="1" id="5f18b622-856d-4e58-b1ab-b6b63734a175" class="numbered-list" start="2"><li>프로미스를 중첩해서 사용하는 경우 콜백에는 익숙한데 프로미스에 익숙하지 않을 때 이런 실수 함<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="99f89bfa-05c3-40b4-88ed-ff3046a02f9e" class="code"><code class="language-JavaScript">
+function myWork(work) {
+    return new Promise((resolve, reject) =&gt; {
+        resolve(work.toUpperCase())
+    })
+}
+
+function playGame(work) {
+    return new Promise((resolve, reject) =&gt; {
+        if (work === &#x27;DONE&#x27;) {
+            resolve(&#x27;GO PLAY GAME&#x27;);
+        } else {
+            reject(new Error(&quot;DON&#x27;T&quot;));
+        }
+    })
+}
+// 1 프로미스를 중첩해서 사용
+myWork(&#x27;done&#x27;)
+    .then(function (result) {
+        playGame(result).then(function (val) {
+            console.log(val);
+        });
+    })
+// 2 결과를 then으로 넘김
+myWork(&#x27;done&#x27;)
+.then(playGame)
+.then(console.log)</code></pre><ol type="1" id="7710a618-ae3c-4e73-9a92-876efcbe6e29" class="numbered-list" start="1"><li>의 코드에서는 프로미스를 중첩해서 사용 콜백사용시 가독성이 안좋아지는 문제로 가독성이 나쁨</li></ol><ol type="1" id="5c502059-1524-4ce3-804e-a7e82feddab5" class="numbered-list" start="2"><li>프로미스는 resolve()의 실행결과를 then()으로 넘길수 있음 이런 점을 이용해 playGame의 결과를 then()으로 받아서 console.log()실행하면 됨</li></ol><ul id="8ae0dd56-4ae4-4865-abfb-3d99f3379c6c" class="bulleted-list"><li style="list-style-type:disc">더좋은방법은 async await로 발전</li></ul></li></ol></li></ul></div></p><hr id="8ddde91c-5916-44ca-9d2e-135250523e79"/><p id="f2160f02-645a-41bf-9135-02fadfc6612a" class="">5.4 async await 구문 187 페이지</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
